@@ -1,0 +1,212 @@
+== Headings and Text
+
+この章では、見出し、本文、字下げ、各種リストの基本的な記法を説明します。
+
+=== Headings
+
+AsciiDocでは、行頭の `=` の数によって見出しのレベルを表します。
+`=` と見出し文字列の間には半角スペースが必要です。
+
+[cols="1,2,3",options="header"]
+|===
+|Level |Syntax |Purpose
+
+|Document title
+|`= Document Title`
+|文書全体のタイトルです。通常は `src/index.adoc` の先頭に一度だけ記載します。
+
+|Level 1
+|`== Chapter Title`
+|章の見出しです。分割した `.adoc` ファイルでは、通常このレベルから始めます。
+
+|Level 2
+|`=== Section Title`
+|章の中のセクションです。
+
+|Level 3
+|`==== Subsection Title`
+|セクションをさらに分割します。
+
+|Level 4
+|`===== Detail Title`
+|より詳細な項目に使用します。
+|===
+
+記法の例は次のとおりです。
+
+[source,asciidoc]
+....
+== Chapter Title
+
+=== Section Title
+
+==== Subsection Title
+
+===== Detail Title
+....
+
+`src/index.adoc` から読み込まれる章ファイルには、文書タイトルを表す `=` を
+記載しません。章ファイルの先頭は `==` にします。
+
+=== Page Breaks
+
+章やセクションの途中に見出しを記載しても、見出しの前で常に改ページされるわけではありません。
+特に `===` 以降のセクション見出しは、通常は直前の本文に続いて同じページへ配置されます。
+
+見出しを次のページから開始したい場合は、見出しの直前に `<<<` を記載して
+強制的に改ページします。
+
+[source,asciidoc]
+....
+本文がここまで続きます。
+
+<<<
+
+=== Heading Starting on a New Page
+
+この本文は新しいページから始まります。
+....
+
+[TIP]
+====
+PDF化する `.adoc` ファイルでは、レイアウト上の区切りに `<<<` を明示しておくと、
+見出しが前ページの末尾に移動することを防ぎ、毎回同じ見た目のPDFを構築しやすくなります。
+特に、章の中で各セクションを必ず新しいページから始めたい場合に有効です。
+
+ただし、本文、図、表などの分量が変わると、改ページ後のレイアウトも変化します。
+内容を変更したときは、生成したPDFでページ位置を確認してください。
+====
+
+=== Paragraphs
+
+通常の文字列は本文の段落として扱われます。
+ソース上で連続している行は、PDFでは一つの段落になります。
+
+[source,asciidoc]
+....
+これは一つ目の段落です。
+ソース上では改行されていますが、同じ段落として処理されます。
+
+空行を入れると、新しい段落になります。
+....
+
+実際の表示は次のとおりです。
+
+これは一つ目の段落です。
+ソース上では改行されていますが、同じ段落として処理されます。
+
+空行を入れると、新しい段落になります。
+
+=== Paragraph Indentation
+
+本文の先頭行の字下げは、AsciiDocファイルに空白を書くのではなく、
+PDFテーマの `prose.text-indent` で設定します。
+現在のテーマでは、次のように5ptの字下げを指定しています。
+
+この設定は、本文が10ptであることを前提として、約半字の字下げになるように調整しています。
+
+[source,yaml]
+----
+prose:
+  text-indent: 5
+----
+
+値を `0` にすると字下げがなくなり、値を大きくすると字下げも大きくなります。
+この設定は文書内の通常の段落全体に適用されます。
+
+[WARNING]
+====
+段落の行頭にスペースを入れて字下げしないでください。
+AsciiDocでは、行頭にスペースがある段落は整形済みテキストまたはリテラルブロックとして
+解釈されるため、通常の本文とは異なる表示になります。
+====
+
+段落間の余白と左側全体の余白は、それぞれ `margin-bottom` と `margin-left` で調整できます。
+
+[source,yaml]
+----
+prose:
+  margin-left: 12
+  margin-bottom: 6
+  text-indent: 5
+----
+
+=== Unordered Lists
+
+`*` で始まる項目は、順序なしリスト（unordered list）になります。
+
+[source,asciidoc]
+....
+* First item
+* Second item
+** Nested item
+* Third item
+....
+
+実際の表示は次のとおりです。
+
+* First item
+* Second item
+** Nested item
+* Third item
+
+=== Ordered Lists
+
+`.` で始まる項目は、順序付きリスト（ordered list）になります。
+番号はAsciiDocが自動的に割り当てるため、ソースに番号を書く必要はありません。
+
+[source,asciidoc]
+....
+. First step
+. Second step
+.. Nested step
+. Third step
+....
+
+実際の表示は次のとおりです。
+
+. First step
+. Second step
+.. Nested step
+. Third step
+
+=== Description Lists
+
+`::` を使用するリストの正式名称は、説明リスト（description list）です。
+用語や項目名と、その説明を組み合わせる場合に使用します。
+
+[source,asciidoc]
+....
+AsciiDoc:: 軽量マークアップ言語です。
+Asciidoctor:: AsciiDoc文書を処理するプロセッサーです。
+Asciidoctor PDF:: AsciiDoc文書をPDFへ変換するコンバーターです。
+....
+
+実際の表示は次のとおりです。
+
+AsciiDoc:: 軽量マークアップ言語です。
+Asciidoctor:: AsciiDoc文書を処理するプロセッサーです。
+Asciidoctor PDF:: AsciiDoc文書をPDFへ変換するコンバーターです。
+
+説明が複数のブロックにまたがる場合は、リスト継続記号 `+` を使用します。
+
+[source,asciidoc]
+....
+Term:: 一つ目の説明段落です。
++
+二つ目の説明段落です。
+....
+
+=== List Appearance
+
+リスト全体の字下げと項目間の余白は、PDFテーマの `list` で調整します。
+
+[source,yaml]
+----
+list:
+  indent: 18
+  item-spacing: 2
+----
+
+`indent` はリスト全体の字下げ、`item-spacing` は各項目の間隔を表します。
+この設定は、文書内のリスト全体に適用されます。

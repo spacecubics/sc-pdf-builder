@@ -1,0 +1,77 @@
+== Links
+
+この章では、外部Webページへのリンクを本文に直接記載する方法と、
+文書属性を使ってURLを一元管理する方法を説明します。
+
+=== Direct Links
+
+URLの後ろに角括弧を付けると、外部Webページへのリンクを作成できます。
+角括弧の中には、リンクとして表示する文字列を指定します。
+
+[source,asciidoc]
+....
+https://docs.asciidoctor.org/[Asciidoctor Documentation]
+....
+
+表示結果は次のとおりです。
+
+https://docs.asciidoctor.org/[Asciidoctor Documentation]
+
+リンクは、次のように本文中へ直接埋め込むこともできます。
+
+[source,asciidoc]
+....
+詳細は https://docs.asciidoctor.org/[Asciidoctor Documentation] を参照してください。
+....
+
+表示結果は次のとおりです。
+
+詳細は https://docs.asciidoctor.org/[Asciidoctor Documentation] を参照してください。
+
+URL自体をリンクの表示文字列にする場合は、角括弧を空にします。
+
+[source,asciidoc]
+....
+https://docs.asciidoctor.org/[]
+....
+
+表示結果は次のとおりです。
+
+https://docs.asciidoctor.org/[]
+
+=== Managing URLs with Attributes
+
+複数の場所で使用するURLは、本文の `.adoc` ファイルへ直接記載せず、
+文書属性として `link-attributes.adoc` にまとめて定義できます。
+この方法では、リンク先を1か所で管理できます。
+
+`index.adoc` の文書ヘッダーで、URLを定義したファイルを読み込みます。
+
+[source,asciidoc]
+....
+include::link-attributes.adoc[]
+....
+
+`link-attributes.adoc` 自体は、次のように記述できます。
+属性名は任意ですが、URLであることが分かるように `-url` を付けると管理しやすくなります。
+リンク先を追加する場合は、同じ形式で属性を1行ずつ追加します。
+
+.link-attributes.adoc
+[source,asciidoc]
+....
+// Define external URLs as document attributes in this file.
+:asciidoctor-docs-url: https://docs.asciidoctor.org/
+....
+
+本文では、URLの代わりに `{属性名}` を使用します。
+
+[source,asciidoc]
+....
+詳細は {asciidoctor-docs-url}[Asciidoctor Documentation] を参照してください。
+....
+
+表示結果は次のとおりです。
+
+詳細は {asciidoctor-docs-url}[Asciidoctor Documentation] を参照してください。
+
+PDFでは、表示されたリンクをクリックするとリンク先のWebページを開けます。

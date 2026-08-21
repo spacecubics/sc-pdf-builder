@@ -1,0 +1,501 @@
+== Figures, Tables, and Code Blocks
+
+この章では、図、表、コードブロックを記載するための基本的な記法を説明します。
+
+=== Figures
+
+図は `image::` を使用して挿入します。
+画像ファイルは `images` ディレクトリに配置します。
+
+[source,asciidoc]
+....
+.Space Cubics logo
+image::sc-logo-ffffff-414551.svg[Space Cubics logo,pdfwidth=45mm,align=center]
+....
+
+先頭の `.Space Cubics logo` は図のキャプションです。
+角括弧の中では、代替テキスト、PDF上の幅、配置などを指定できます。
+
+.Space Cubics logo
+image::sc-logo-ffffff-414551.svg[Space Cubics logo,pdfwidth=45mm,align=center]
+
+<<<
+
+=== Tables
+
+表は `|===` で囲み、各セルの先頭に `|` を付けます。
+次の例では、`cols` で3列の幅の比率を指定し、`options="header"` で先頭行を
+ヘッダーとして扱っています。
+
+[source,asciidoc]
+....
+.Interface summary
+[cols="1,2,2",options="header"]
+|===
+|No. |Interface |Description
+|1   |UART      |Serial console
+|2   |I2C       |Sensor interface
+|===
+....
+
+.Interface summary
+[cols="1,2,2",options="header"]
+|===
+|No. |Interface |Description
+|1   |UART      |Serial console
+|2   |I2C       |Sensor interface
+|===
+
+[TIP]
+====
+`cols` の値は、列幅そのものではなく列同士の相対的な比率です。
+値の合計を100にする必要はありませんが、列数が多い幅の広い表では、
+合計を100にしておくと各値をパーセントとして読み取れます。
+
+例えば、`cols="10,25,25,40"` と記載すると、それぞれの列幅を
+10%、25%、25%、40%として読み取れます。各値を1ずつ増減して細かく調整できるため、
+列幅の割合を柔軟に変更できます。
+====
+
+==== Table Width and Alignment
+
+表全体の幅は `width` 属性で指定します。
+例えば `width="60%"` は、本文を配置できる領域の60%の幅で表を作成します。
+表の幅を100%未満にすると、`align` 属性による表自体の配置を確認できます。
+
+左寄せにする場合は `align=left` を指定します。
+
+[source,asciidoc]
+....
+.Left-aligned table
+[width="60%",align=left,cols="1,2",options="header"]
+|===
+|Item |Description
+|UART |Serial console
+|I2C |Sensor interface
+|===
+....
+
+実際の表示は次のとおりです。
+
+.Left-aligned table
+[width="60%",align=left,cols="1,2",options="header"]
+|===
+|Item |Description
+|UART |Serial console
+|I2C |Sensor interface
+|===
+
+中央寄せにする場合は `align=center` を指定します。
+
+[source,asciidoc]
+....
+.Center-aligned table
+[width="60%",align=center,cols="1,2",options="header"]
+|===
+|Item |Description
+|UART |Serial console
+|I2C |Sensor interface
+|===
+....
+
+実際の表示は次のとおりです。
+
+.Center-aligned table
+[width="60%",align=center,cols="1,2",options="header"]
+|===
+|Item |Description
+|UART |Serial console
+|I2C |Sensor interface
+|===
+
+==== Cell Alignment
+
+`align` 属性は表全体の配置を指定しますが、`^|` は個別のセル内にある文字列を
+水平方向の中央へ配置します。
+
+[source,asciidoc]
+....
+.Centered table cells
+[cols="2,1",options="header"]
+|===
+|Interface |Status
+
+|UART
+^|Enabled
+
+|I2C
+^|Disabled
+|===
+....
+
+実際の表示は次のとおりです。`Status` 列の本文セルだけが中央寄せになります。
+
+.Centered table cells
+[cols="2,1",options="header"]
+|===
+|Interface |Status
+
+|UART
+^|Enabled
+
+|I2C
+^|Disabled
+|===
+
+<<<
+
+==== Horizontal Cell Spanning
+
+複数の列を一つのセルとして横方向に結合することを、セルの横結合と呼びます。
+セルの先頭に `結合する列数+|` を指定します。
+次の例では、`2+|` を使って2列を結合しています。
+
+[source,asciidoc]
+....
+.Horizontal cell spanning
+[cols="1,1,1",options="header"]
+|===
+|Column A |Column B |Column C
+
+2+|Columns A and B
+|Column C
+
+|Column A
+2+|Columns B and C
+|===
+....
+
+実際の表示は次のとおりです。
+
+.Horizontal cell spanning
+[cols="1,1,1",options="header"]
+|===
+|Column A |Column B |Column C
+
+2+|Columns A and B
+|Column C
+
+|Column A
+2+|Columns B and C
+|===
+
+==== Vertical Cell Spanning
+
+複数の行を一つのセルとして縦方向に結合することを、セルの縦結合と呼びます。
+セルの先頭に `.結合する行数+|` を指定します。
+次の例では、`.2+|` を使って2行を結合しています。
+
+[source,asciidoc]
+....
+.Vertical cell spanning
+[cols="1,1,2",options="header"]
+|===
+|Category |Item |Description
+
+.2+|Serial
+|UART
+|Serial console
+
+|I2C
+|Sensor interface
+|===
+....
+
+実際の表示は次のとおりです。
+
+.Vertical cell spanning
+[cols="1,1,2",options="header"]
+|===
+|Category |Item |Description
+
+.2+|Serial
+|UART
+|Serial console
+
+|I2C
+|Sensor interface
+|===
+
+<<<
+
+==== Special Table Font Sizes
+
+列数が多い表や、各セルに長い文字列を含む幅の広い表では、文字サイズを小さくすると
+セル内の折り返しを減らし、表全体を読みやすく配置できます。
+この環境では、表の文字を小さくする `.small-table` と `.vsmall-table` を使用できます。
+
+これらはAsciidoctorの標準機能ではなく、このPDF生成環境が提供する独自のロールです。
+通常の表は9pt、`.small-table` は8pt、`.vsmall-table` は7ptで表示されます。
+
+ロールと `cols` を指定する記法は次のとおりです。
+
+[source,asciidoc]
+....
+[.small-table,cols="1,2,2,3",options="header"]
+|===
+|No. |Interface |Signal |Description
+|1 |UART |TX / RX |Serial console interface
+|===
+....
+
+以下の3つの表は、同じ `cols="1,2,2,3"` と同じ内容を使用しています。
+文字サイズの違いを比較できます。
+
+.Normal table (9pt)
+[cols="1,2,2,3",options="header"]
+|===
+|No. |Interface |Signal |Description
+|1 |UART |TX / RX |Serial console interface
+|2 |I2C |SCL / SDA |External sensor interface
+|===
+
+.Small table (8pt)
+[.small-table,cols="1,2,2,3",options="header"]
+|===
+|No. |Interface |Signal |Description
+|1 |UART |TX / RX |Serial console interface
+|2 |I2C |SCL / SDA |External sensor interface
+|===
+
+.Very small table (7pt)
+[.vsmall-table,cols="1,2,2,3",options="header"]
+|===
+|No. |Interface |Signal |Description
+|1 |UART |TX / RX |Serial console interface
+|2 |I2C |SCL / SDA |External sensor interface
+|===
+
+<<<
+
+=== Code Blocks
+
+コードブロックは `[source,言語名]` の後を `----` で囲みます。
+言語名を指定すると、Rougeによるシンタックスハイライトが適用されます。
+
+[source,asciidoc,subs="-callouts"]
+....
+[source,c]
+----
+#include <stdio.h>
+
+int main(void)
+{
+    printf("Hello, world!\n"); // Print a message. <1>
+    return 0;
+}
+----
+<1> コールアウトを使ってコードを説明できます。
+....
+
+実際の表示は次のようになります。
+
+[source,c]
+----
+#include <stdio.h>
+
+int main(void)
+{
+    printf("Hello, world!\n"); // Print a message. <1>
+    return 0;
+}
+----
+<1> コールアウトを使ってコードを説明できます。
+
+コードブロックには、任意でキャプションを付けることができます。
+キャプションを付ける場合は、`[source,言語名]` の直前に
+`.` で始まるキャプションを記載します。
+基本のコードブロックとは別のソース例で記法を示します。
+
+[source,asciidoc]
+....
+.Hello program
+[source,c]
+----
+printf("Hello, world!\n");
+----
+....
+
+実際の表示は次のとおりです。
+
+.Hello program
+[source,c]
+----
+printf("Hello, world!\n");
+----
+
+<<<
+
+==== Line Highlighting
+
+特定の行を強調する場合は `highlight` 属性を指定します。
+
+[source,asciidoc]
+....
+[source,c,highlight="3..4"]
+----
+int value = read_value();
+validate(value);
+process(value);
+write_value(value);
+----
+....
+
+`highlight="3..4"` は、コードブロックの3行目から4行目までを強調する指定です。
+実際の表示は次のとおりです。
+
+.Highlighted lines
+[source,c,highlight="3..4"]
+----
+int value = read_value();
+validate(value);
+process(value);
+write_value(value);
+----
+
+==== Special Code Font Sizes
+
+長いコードや一行が長いコードでは、`[.small-code]` または `[.vsmall-code]` を
+コードブロックの前に指定すると文字を小さくできます。
+特に、ツールの実行ログ、コンパイラーの出力、長いファイルパスを含む診断結果など、
+幅が非常に広い内容を表示するときに便利です。
+これらはAsciidoctorの標準機能ではなく、このPDF生成環境が提供する独自のロールです。
+
+`[.small-code]` はテーマのコードフォントから1pt、`[.vsmall-code]` は2pt
+小さくします。現在のテーマでは通常のコードが8ptなので、それぞれ7ptと6ptになります。
+
+記法は次のとおりです。
+
+[source,asciidoc]
+....
+[.small-code]
+[source,c]
+----
+int main(void)
+{
+    return 0;
+}
+----
+....
+
+さらに小さくする場合は、`.vsmall-code` を指定します。
+
+[source,asciidoc]
+....
+[.vsmall-code]
+[source,c]
+----
+int main(void)
+{
+    return 0;
+}
+----
+....
+
+<<<
+
+以下は、同じツール実行ログを通常、small、vsmallの3種類で表示した例です。
+
+.Normal code sample (8pt)
+[source,text]
+----
+[INFO] target=sc-obc-a1 input=src/index.adoc output=build/SpaceCubics_PDF_revx.pdf status=success
+----
+
+.Small code sample (7pt)
+[.small-code]
+[source,text]
+----
+[INFO] target=sc-obc-a1 input=src/index.adoc output=build/SpaceCubics_PDF_revx.pdf status=success
+----
+
+.Very small code sample (6pt)
+[.vsmall-code]
+[source,text]
+----
+[INFO] target=sc-obc-a1 input=src/index.adoc output=build/SpaceCubics_PDF_revx.pdf status=success
+----
+
+==== Code Blocks in Description Lists
+
+説明リストの項目にキャプション付きコードブロックをぶら下げる場合は、
+リスト継続記号 `+` の後に、キャプションとコードブロックを記載します。
+
+[source,asciidoc]
+....
+Build command:: PDFを生成するコマンドです。
++
+.Build the standard PDF
+[source,sh]
+----
+make standard
+----
+....
+
+実際の表示は次のとおりです。
+
+Build command:: PDFを生成するコマンドです。
++
+.Build the standard PDF
+[source,sh]
+----
+make standard
+----
+
+複数の段落やコードブロックを同じ説明項目へまとめる場合は、
+それらを一つのopen blockとして `--` で囲みます。
+
+[source,asciidoc]
+....
+Build command:: PDFを生成するコマンドです。
++
+--
+.Build the standard PDF
+[source,sh]
+----
+make standard
+----
+
+生成されたPDFは `build` ディレクトリに保存されます。
+--
+....
+
+実際の表示は次のとおりです。
+
+Build command:: PDFを生成するコマンドです。
++
+--
+.Build the standard PDF
+[source,sh]
+----
+make standard
+----
+
+生成されたPDFは `build` ディレクトリに保存されます。
+--
+
+<<<
+
+=== Custom Size Extension
+
+表とコードの文字サイズを変更する独自ロールは、
+`scripts/asciidoctor_extensions/small_element.rb` に実装されています。
+MakefileはPDF生成時に次のオプションでこのRuby拡張を読み込みます。
+
+[source,sh]
+----
+asciidoctor-pdf -r ./scripts/asciidoctor_extensions/small_element.rb ...
+----
+
+この拡張を読み込まずにAsciidoctor PDFを直接実行した場合、
+`.small-table`、`.vsmall-table`、`.small-code`、`.vsmall-code` による
+文字サイズの変更は適用されません。
+
+[WARNING]
+====
+この拡張はAsciidoctorの公式Extension APIではなく、Rubyの `Module#prepend` を使って
+Asciidoctor PDFコンバーターの内部メソッドを上書きしています。
+Asciidoctor PDFの将来のバージョンで内部実装が変更された場合、
+文字サイズの変更が動作しなくなる可能性があります。
+Asciidoctor PDFを更新するときは、この拡張が引き続き動作することを確認してください。
+====

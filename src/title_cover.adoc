@@ -1,0 +1,215 @@
+== Title and Cover Page
+
+文書のタイトルや表紙の情報は `src/index.adoc` に設定します。
+
+Asciidoctorでは、文書番号や秘密区分などをPDFの表紙へ自由に配置することが難しいため、
+この環境では、表示のベースとなるSVGの文字列をPythonスクリプトで置換しています。
+
+この章では、表紙を構成するために `src/index.adoc` へ記載する内容を説明します。
+
+=== Title
+
+文書名は `src/index.adoc` に記載します。
+
+`=` の後に、以下の記法で記載します。
+
+[source,asciidoc]
+----
+= Title: Subtitle
+----
+
+`:` 以降を書かない場合、サブタイトルは空欄になります。
+タイトル自体に `:` を含めたい場合は、`src/index.adoc` の `:title-separator:` を
+`:` から `|` などに変更します。
+Asciidoctorのデフォルトは `:` です。
+
+=== Author
+
+ドキュメントのAuthorは、テーマによって表紙に表示されないようにしています。
+
+表紙にはSpace Cubicsのロゴを表示しています。
+このデザインでは、Author情報として「Space Cubics Inc.」を重ねて表示する必要がないためです。
+
+`src/index.adoc` の `:author:` に設定されている情報は、PDFのメタデータとして埋め込まれます。
+個人名などを表紙に表示したい場合は、`themes/sc-docs-theme.yml` を編集してください。
+
+[source,yml]
+----
+title-page:
+ ...
+  authors:
+    display: none  <1>
+    margin-top: 24
+    font-family: Noto Sans JP
+    font-size: 10.5
+    font-color: FFFFFF
+----
+<1> この行を削除
+
+=== Classification Level
+
+表紙上部左は *秘密区分* を記載するためのフィールドです。
+秘密区分は、`src/index.adoc` の `:confidential-label:` に設定します。
+
+取り扱い注意文書は、以下のように設定します。
+
+[source,asciidoc]
+----
+:confidential-label: SC Confidential
+----
+
+このフィールドは、記載されたテキストをそのまま表示するため、別の目的にも使用できます。
+
+フィールドが空の場合は、何も表示されません。例えば公開文書（Public）の場合は、このフィールドを空欄にします。
+
+[source,asciidoc]
+----
+:confidential-label:
+----
+
+<<<
+
+=== Document Number
+
+表紙上部右は *文書番号* を記載するためのフィールドです。
+文書番号は、`src/index.adoc` の `:document-number:` に設定します。
+
+[source,asciidoc]
+----
+:document-number: SC-ESP-XXXXX
+----
+
+このフィールドは、記載されたテキストをそのまま表示するため、別の目的にも使用できます。
+
+フィールドが空の場合は、何も表示されません。
+
+=== Product Name
+
+表紙に *製品名* を入れることができます。このフィールドは、Space Cubicsの自社製品名を入れることを想定しています。
+
+Product Nameは文書名の上部に配置されます。
+
+[source,asciidoc]
+----
+:product-name: SC-OBC Module A1
+----
+
+フィールドが空の場合は、何も表示されません。
+
+=== Date
+
+表紙の日付は `src/index.adoc` の `:date:` に設定します。
+日付を指定した場合は、その値をそのまま表示します。
+
+[source,asciidoc]
+----
+:date: January 1, 1970
+----
+
+`BUILDDATE` を指定した場合は、PDFを生成した日付を英語表記で表示します。
+
+[source,asciidoc]
+----
+:date: BUILDDATE
+----
+
+表示例は次のとおりです。
+
+[source,text]
+----
+DATE: August 21, 2026
+----
+
+=== Revision
+
+表紙のリビジョンは `src/index.adoc` の `:revision:` に設定します。
+数値などを指定した場合は、その値をそのまま表示します。
+
+[source,asciidoc]
+----
+:revision: 1.0
+----
+
+`GITHASH` を指定した場合は、PDF生成時のGitコミットハッシュを12桁に短縮して表示します。
+Git管理済みのファイルにコミットされていない変更がある場合は、
+ハッシュの末尾に `-dirty` が付きます。未追跡ファイルは判定に影響しません。
+
+[source,asciidoc]
+----
+:revision: GITHASH
+----
+
+表示例は次のとおりです。
+
+[source,text]
+----
+REVISION: a2b08711b7d5-dirty
+----
+
+=== Cover Footer
+
+表紙下部の文字列は `src/index.adoc` の `:cover-footer-text:` に設定します。
+ラベルは固定されていないため、次のように任意の文字列を指定できます。
+
+[source,asciidoc]
+----
+:cover-footer-text: PART NUMBER: SC-OBC-A0001
+----
+
+何も表示しない場合は、値を空にします。
+
+[source,asciidoc]
+----
+:cover-footer-text:
+----
+
+=== Other Settings
+
+`src/index.adoc` では、表紙の内容以外に次の文書属性を設定しています。
+
+[.small-table]
+[cols="2,5",options="header"]
+|===
+|Setting |Description
+
+|:copyright-year:
+|フッターのCopyright表記に使用する年を設定します。この環境のPDFテーマが参照する独自属性です。
+ `2026` などを設定します。
+
+|:doctype:
+|文書形式を設定します。bookに設定すると、章単位の構成、タイトルページ、目次など、書籍向けの構造で処理されます。
+
+|:scripts:
+|`cjk` を設定することで、日本語、中国語、韓国語などのCJK文字に適した改行処理を有効にします。
+ *英語の文書では、このフィールドを削除することを推奨します。*
+
+|:toc:
+|目次を生成します。値のない属性は、機能を有効にする設定として使用されます。
+
+|:toc-title:
+|目次ページのタイトルを設定します。 `Table of Contents` や `目次` など任意の文字列を設定します。
+
+|:toclevels:
+|目次に掲載するセクションの深さを設定します。
+
+|:sectnums:
+|章およびセクションの見出しに番号を付けます。
+
+|:sectnumlevels:
+|番号を付けるセクションの深さを設定します。
+
+|:chapter-signifier:
+|章番号の前に付く `Chapter` などの文字列を空にします。章見出しは `1. Title` のように表示されます。
+
+|:figure-caption:
+|図キャプションのラベルを設定します。 `Figure` や `図`などの文字列を設定します。
+
+|:table-caption:
+|表キャプションのラベルを設定します。 `Table` や `表` などの文字列を設定します。
+
+|:source-highlighter:
+|`rouge` を設定すると、コードブロックのシンタックスハイライターとしてRougeを使用します。ビルド環境にRouge gemがインストールされている必要があります。
+
+|:icons:
+|`font` を設定すると、AdmonitionなどのアイコンにAsciidoctor PDFに組み込まれたFont Awesomeアイコンを使用します。
+|===

@@ -1,0 +1,33 @@
+= Space Cubics PDF Builder: Asciidoctor PDF Generation Environment Template
+:author: Space Cubics Inc.
+:confidential-label: SC Confidential
+:document-number: SC-ESP-XXXXX
+:product-name: Design Guide
+:date: January 1, 1970
+:revision: 1.0
+:cover-footer-text: PART NUMBER: SC-OBC-A0001
+:copyright-year: 2026
+:doctype: book
+:scripts: cjk
+:title-separator: :
+:toc:
+:toc-title: Table of Contents
+:toclevels: 3
+:sectnums:
+:sectnumlevels: 4
+:chapter-signifier:
+:figure-caption: Figure
+:table-caption: Table
+:source-highlighter: rouge
+:icons: font
+include::link-attributes.adoc[]
+
+include::title_cover.adoc[]
+
+include::headings_and_text.adoc[]
+
+include::figures_tables_code.adoc[]
+
+include::links.adoc[]
+
+include::admonition.adoc[]
