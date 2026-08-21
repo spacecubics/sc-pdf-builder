@@ -1,0 +1,9 @@
+extends: sc-docs
+
+title-page:
+  logo:
+    image: image:../images/sc-logo-414551-ffffff.svg[pdfwidth=60mm]
+  title:
+    font-color: 414551
+  subtitle:
+    font-color: 414551
