@@ -106,19 +106,19 @@ Build both versions with:
 make all
 ```
 
-To specify the output file name, override the `MANUAL` variable. Specify the
+To specify the output file name, override the `OUTPUT` variable. Specify the
 base name without the `.pdf` extension:
 
 ```sh
-make pdf MANUAL=My_Document
+make pdf OUTPUT=My_Document
 ```
 
 This command generates `build/My_Document.pdf`. The same variable can be used
 for the print-friendly PDF or both versions:
 
 ```sh
-make print MANUAL=My_Document
-make all MANUAL=My_Document
+make print OUTPUT=My_Document
+make all OUTPUT=My_Document
 ```
 
 These commands generate `build/My_Document-print.pdf`, or both output files,

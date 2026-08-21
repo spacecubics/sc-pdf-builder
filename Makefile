@@ -1,11 +1,11 @@
-MANUAL      := SpaceCubics_PDF_revx
+OUTPUT      := SpaceCubics_PDF_revx
 ADOC_SOURCE := src/index.adoc
 ADOC_DIR    := $(patsubst %/,%,$(dir $(ADOC_SOURCE)))
 ADOC_FILES  := $(shell find "$(ADOC_DIR)" -type f -name '*.adoc' -print)
 BUILD_DIR   := build
 
-STANDARD_PDF := $(BUILD_DIR)/$(MANUAL).pdf
-PRINT_PDF    := $(BUILD_DIR)/$(MANUAL)-print.pdf
+STANDARD_PDF := $(BUILD_DIR)/$(OUTPUT).pdf
+PRINT_PDF    := $(BUILD_DIR)/$(OUTPUT)-print.pdf
 
 ASCIIDOCTOR_PDF := asciidoctor-pdf
 PYTHON          := python3
