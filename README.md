@@ -1,82 +1,138 @@
-# A Template Repository for Space Cubics
+# Space Cubics PDF Builder
 
-This repository serves as a template for Space Cubics. You can use it
-when creating a new repository. You can add, remove, or modify the
-settings to fit your project.
+This repository is a template for creating PDF documents from AsciiDoc
+sources with Asciidoctor PDF.
 
-## Codespell
+The included themes and cover designs are provided as Space Cubics samples.
+Use them as they are, or adapt them to the requirements of your document.
+The template produces a standard PDF and a print-friendly PDF whose cover
+uses less solid-color fill.
 
-https://github.com/codespell-project/codespell
+For examples of AsciiDoc syntax, build the sample document and read the
+generated PDF. It covers titles, paragraphs, lists, figures, tables, code
+blocks, admonitions, and links.
 
-Codespell is a tool for fixing common misspellings in text files. You
-can add project-specific words to `.codespell-ignore` so that
-codespell will ignore them.
+## Requirements
 
-## gitlint
+The build requires the following tools:
 
-https://github.com/jorisroovers/gitlint
+- GNU Make
+- Python 3
+- Ruby
+- Asciidoctor PDF
+- Rouge
 
-gitlint is a linter for git commit messages. In our configuration,
-gitlint checks all commits in a given pull request.
+On Debian or Ubuntu, install the basic tools with:
 
-Special care is taken for lines that start with common Signed-off-by
-lines or HTTPS references. See `.gitlint` for more details.
-
-## linelint
-
-https://github.com/fernandrone/linelint
-
-linelint is a linter that checks for a trailing newline at the end of
-a file. In C, a source file without a final newline is not valid.
-This may not suit every repository or programming language, so remove
-it if you do not need it.
-
-## Dependabot
-
-https://docs.github.com/en/code-security/how-tos/secure-your-supply-chain/secure-your-dependencies/configuring-dependabot-version-updates
-
-`.github/dependabot.yml` configures GitHub Dependabot. This template
-only defines updates for GitHub Actions. If you use other ecosystems
-such as Python, Node.js, Rust, or others, please customize it.
-
-## .gitignore
-
-`.gitignore` specifies intentionally untracked files that Git should
-ignore. The contents of this file may vary from project to project,
-but you probably already know what to put here.
-
-## .editorconfig
-
-`.editorconfig` defines basic coding style settings for the project.
-Many editors, such as Emacs, Vim, and Visual Studio Code, support it.
-
-## CODEOWNERS
-
-https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
-
-This template includes a `CODEOWNERS` file as a starting point.
-
-When you create a new repository from this template, review the copied
-`CODEOWNERS` file and replace the example entries with the actual
-maintainers for that repository.
-
-After updating the file, remove any unused comments and example lines.
-Keep the file as simple as possible so that it reflects the actual
-ownership rules for the repository.
-
-`CODEOWNERS` entries consist of a path pattern followed by one or more
-owners. Owners can be GitHub usernames or Space Cubics teams.
-
-Example:
-
-```text
-*                      @yashi
-/src/                  @spacecubics/software
-/fpga/                 @spacecubics/fpga
+```sh
+sudo apt update
+sudo apt install make python3 ruby ruby-dev build-essential
 ```
 
-Notes:
+Install the required Ruby gems with:
 
-- Owners must have write access to the repository.
-- Teams must be visible in the organization and have write access to the repository.
-- If you want multiple owners for the same pattern, put them on the same line.
+```sh
+gem install asciidoctor-pdf rouge
+```
+
+## Tested Versions
+
+The PDFs have been successfully built with:
+
+- GNU Make 4.4.1
+- Python 3.13.5
+- Ruby 3.3.8
+- Asciidoctor PDF 2.3.24
+- Asciidoctor 2.0.23
+- Rouge 4.7.0
+
+## Fonts
+
+The sample theme uses the following fonts:
+
+- Noto Sans JP for normal text, headings, tables, and page furniture
+- Sarasa Mono J for code blocks and inline code
+
+The fonts are not included in this repository. The theme currently expects
+the following files:
+
+```text
+/usr/share/fonts/truetype/Noto_Sans_JP/NotoSansJP-Regular.ttf
+/usr/share/fonts/truetype/Noto_Sans_JP/NotoSansJP-Bold.ttf
+/usr/share/fonts/truetype/SarasaMonoJ/SarasaMonoJ-Regular.ttf
+/usr/share/fonts/truetype/SarasaMonoJ/SarasaMonoJ-Italic.ttf
+/usr/share/fonts/truetype/SarasaMonoJ/SarasaMonoJ-Bold.ttf
+/usr/share/fonts/truetype/SarasaMonoJ/SarasaMonoJ-BoldItalic.ttf
+```
+
+Install these fonts before building the PDF. The Noto Sans JP regular font is
+also used for italic text, and its bold font is used for bold italic text.
+
+Font installation locations differ between operating systems and Linux
+distributions. A font being installed on the system is not sufficient if its
+file path differs from the path in the theme. In that case, update the
+`font.catalog` entries in `themes/sc-docs-theme.yml` to point to the actual
+font files. Incorrect paths cause Asciidoctor PDF to report an unknown font or
+fail while generating the PDF.
+
+## Building the PDFs
+
+The main document is `src/index.adoc`. Edit its document attributes and the
+included chapter files before building.
+
+To build a document whose entry point is in another directory, change
+`ADOC_SOURCE` in the `Makefile`. All `.adoc` files in that directory and its
+subdirectories are automatically added as build dependencies. For example:
+
+```make
+ADOC_SOURCE := src/my-document/index.adoc
+```
+
+Build the standard PDF with:
+
+```sh
+make pdf
+```
+
+Build the print-friendly PDF with:
+
+```sh
+make print
+```
+
+Build both versions with:
+
+```sh
+make all
+```
+
+To specify the output file name, override the `MANUAL` variable. Specify the
+base name without the `.pdf` extension:
+
+```sh
+make pdf MANUAL=My_Document
+```
+
+This command generates `build/My_Document.pdf`. The same variable can be used
+for the print-friendly PDF or both versions:
+
+```sh
+make print MANUAL=My_Document
+make all MANUAL=My_Document
+```
+
+These commands generate `build/My_Document-print.pdf`, or both output files,
+respectively.
+
+The generated files are written to `build/`:
+
+```text
+build/SpaceCubics_PDF_revx.pdf
+build/SpaceCubics_PDF_revx-print.pdf
+```
+
+Remove generated files with:
+
+```sh
+make clean
+```
