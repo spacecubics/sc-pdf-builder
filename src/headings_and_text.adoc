@@ -210,3 +210,45 @@ list:
 
 `indent` はリスト全体の字下げ、`item-spacing` は各項目の間隔を表します。
 この設定は、文書内のリスト全体に適用されます。
+
+=== Mathematical Expressions
+
+LaTeX形式の数式を記載するには、文書属性 `:stem: latexmath` を
+`src/index.adoc` に設定します。
+数式を無効にする場合は、この属性を削除するか、行頭に `//` を付けてコメントアウトします。
+
+文中に数式を挿入する場合は、`latexmath:[]` を使用します。
+
+[source,asciidoc]
+....
+円の面積は latexmath:[S = \pi r^2] で求められます。
+....
+
+実際の表示は次のとおりです。
+
+円の面積は latexmath:[S = \pi r^2] で求められます。
+
+独立した数式は、`[latexmath]` を付けたブロックとして記載します。
+
+[source,asciidoc]
+....
+[latexmath]
+++++
+\frac{1}{\sqrt{2\pi\sigma^2}}
+\exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right)
+++++
+....
+
+実際の表示は次のとおりです。
+
+[latexmath]
+++++
+\frac{1}{\sqrt{2\pi\sigma^2}}
+\exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right)
+++++
+
+[NOTE]
+====
+PDF生成時は `asciidoctor-mathematical` が必要です。
+このプロジェクトのMakefileは拡張を自動的に読み込み、SVG形式で数式を生成します。
+====

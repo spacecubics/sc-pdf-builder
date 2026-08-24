@@ -212,4 +212,10 @@ REVISION: a2b08711b7d5-dirty
 
 |:icons:
 |`font` を設定すると、AdmonitionなどのアイコンにAsciidoctor PDFに組み込まれたFont Awesomeアイコンを使用します。
+
+|:stem:
+|`latexmath` を設定すると、LaTeX形式の数式を有効にします。数式を無効にする場合は、この属性を削除するかコメントアウトします。
+
+|:mathematical-format:
+|`svg` を設定すると、`asciidoctor-mathematical` が数式をSVG形式で生成します。この属性を省略すると、既定のPNG形式で生成します。
 |===

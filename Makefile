@@ -38,6 +38,7 @@ $(STANDARD_PDF): $(ADOC_FILES) $(STANDARD_COVER) $(PDF_ASSETS)
 	  "$(STANDARD_COVER)" "$(RENDERED_COVER)" --adoc "$(ADOC_SOURCE)"
 	$(ASCIIDOCTOR_PDF) \
 	  -r ./$(EXTENSION) \
+	  -r asciidoctor-mathematical \
 	  --failure-level WARN \
 	  --trace \
 	  -a reproducible \
@@ -54,6 +55,7 @@ $(PRINT_PDF): $(ADOC_FILES) $(PRINT_COVER) $(PRINT_THEME) $(PDF_ASSETS)
 	  "$(PRINT_COVER)" "$(RENDERED_COVER)" --adoc "$(ADOC_SOURCE)"
 	$(ASCIIDOCTOR_PDF) \
 	  -r ./$(EXTENSION) \
+	  -r asciidoctor-mathematical \
 	  --failure-level WARN \
 	  --trace \
 	  -a reproducible \

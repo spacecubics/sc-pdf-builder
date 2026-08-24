@@ -20,6 +20,8 @@
 :table-caption: Table
 :source-highlighter: rouge
 :icons: font
+:stem: latexmath
+:mathematical-format: svg
 include::link-attributes.adoc[]
 
 include::title_cover.adoc[]
