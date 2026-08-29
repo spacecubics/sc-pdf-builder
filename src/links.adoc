@@ -75,3 +75,56 @@ include::link-attributes.adoc[]
 詳細は {asciidoctor-docs-url}[Asciidoctor Documentation] を参照してください。
 
 PDFでは、表示されたリンクをクリックするとリンク先のWebページを開けます。
+
+=== Links Within This Document
+
+同じ文書内の章、図、表などにリンクするには、リンク先にアンカーIDを指定してから、
+`<<アンカーID,表示文字列>>` で参照します。PDFでは、リンクをクリックすると該当する
+場所へ移動します。
+
+章題へリンクする場合は、見出しの直前に `[[アンカーID]]` を記載します。
+このサンプルの `Title and Cover Page` 章には、次のアンカーを設定しています。
+
+[source,asciidoc]
+....
+[[title-and-cover-page]]
+== Title and Cover Page
+....
+
+本文からは、次のようにリンクします。
+
+[source,asciidoc]
+....
+詳細は <<title-and-cover-page,Title and Cover Page>> を参照してください。
+....
+
+表示結果は次のとおりです。
+
+詳細は <<title-and-cover-page,Title and Cover Page>> を参照してください。
+
+図へリンクする場合は、図のキャプションの直後、画像ブロックの直前に
+`[#アンカーID]` を記載します。このサンプルでは、Space Cubics logoの図に
+次のアンカーを設定しています。
+
+[source,asciidoc]
+....
+.Space Cubics logo
+[#spacecubics-logo-figure]
+image::sc-logo-ffffff-414551.svg[Space Cubics logo,pdfwidth=45mm,align=center]
+....
+
+リンクテキストには任意の文字列を指定できます。図番号で参照する場合は、
+次のように記載します。
+
+[source,asciidoc]
+....
+詳細は <<spacecubics-logo-figure,Figure 1>> を参照してください。
+....
+
+表示結果は次のとおりです。
+
+詳細は <<spacecubics-logo-figure,Figure 1>> を参照してください。
+
+表とコードブロックにも、図と同じようにキャプションの直後、対象ブロックの直前へ
+`[#アンカーID]` を記載することでリンクを設定できます。リンクテキストには、
+図番号、キャプション名、説明文など、用途に応じた任意の文字列を指定できます。

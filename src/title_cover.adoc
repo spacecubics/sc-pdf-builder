@@ -1,3 +1,4 @@
+[[title-and-cover-page]]
 == Title and Cover Page
 
 文書のタイトルや表紙の情報は `src/index.adoc` に設定します。

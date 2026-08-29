@@ -17,6 +17,7 @@ image::sc-logo-ffffff-414551.svg[Space Cubics logo,pdfwidth=45mm,align=center]
 角括弧の中では、代替テキスト、PDF上の幅、配置などを指定できます。
 
 .Space Cubics logo
+[#spacecubics-logo-figure]
 image::sc-logo-ffffff-414551.svg[Space Cubics logo,pdfwidth=45mm,align=center]
 
 <<<
