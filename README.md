@@ -75,23 +75,31 @@ file path differs from the path in the theme. In that case, update the
 font files. Incorrect paths cause Asciidoctor PDF to report an unknown font or
 fail while generating the PDF.
 
-## Building the PDFs
+## Building PDFs
 
-The main document is `src/index.adoc`. Edit its document attributes and the
-included chapter files before building.
+Create a `Makefile` in the root of a document repository, then use it to build
+the PDFs. Start by cloning the PDF builder and copying its sample Makefile:
 
-To build a document whose entry point is in another directory, change
-`ADOC_SOURCE` in the `Makefile`. All `.adoc` files in that directory and its
-subdirectories are automatically added as build dependencies. For example:
-
-```make
-ADOC_SOURCE := src/my-document/index.adoc
+```sh
+git clone {sc-pdf-builder URL}
+cp sc-pdf-builder/Makefile_sample Makefile
+make ADOC_SOURCE=path/to/document.adoc \
+  IMAGES_DIR=path/to/images
 ```
 
-Build the standard PDF with:
+The command builds both PDF variants in the document repository's `build/`
+directory. Build only the standard PDF with:
 
 ```sh
 make pdf
+```
+
+To build the sample document included with the PDF builder, use its source and
+image directories:
+
+```sh
+make ADOC_SOURCE=sc-pdf-builder/src/index.adoc \
+  IMAGES_DIR=sc-pdf-builder/images
 ```
 
 Build the print-friendly PDF with:
@@ -100,39 +108,54 @@ Build the print-friendly PDF with:
 make print
 ```
 
-Build both versions with:
+Remove generated files with:
 
 ```sh
-make all
+make clean
 ```
 
-To specify the output file name, override the `OUTPUT` variable. Specify the
-base name without the `.pdf` extension:
+### Configure the build
+
+`Makefile_sample` supplies the following variables. Override a variable on the
+command line for a single build, or set its value in the document repository's
+`Makefile` to make the setting permanent.
+
+- `PDF_BUILDER` is the path to the cloned builder. Its default is
+  `sc-pdf-builder`.
+- `ADOC_SOURCE` is the entry-point `.adoc` file. Its default is
+  `src/index.adoc`. All `.adoc` files in its directory and subdirectories are
+  build dependencies.
+- `IMAGES_DIR` is the directory used for `image::` references. Its default is
+  `images`.
+- `OUTPUT` is the base name of the generated PDFs, without the `.pdf`
+  extension. Its default is `document`.
+- `BUILD_DIR` is the output directory. Its default is `build`.
+
+For example, build a document whose source and images are in custom locations:
 
 ```sh
-make pdf OUTPUT=My_Document
+make pdf ADOC_SOURCE=docs/manual/manual.adoc \
+  IMAGES_DIR=docs/assets OUTPUT=My_Document
 ```
 
-This command generates `build/My_Document.pdf`. The same variable can be used
-for the print-friendly PDF or both versions:
+This command generates `build/My_Document.pdf`. The same settings apply to
+the print-friendly PDF and both PDF variants:
 
 ```sh
 make print OUTPUT=My_Document
 make all OUTPUT=My_Document
 ```
 
-These commands generate `build/My_Document-print.pdf`, or both output files,
-respectively.
-
-The generated files are written to `build/`:
-
-```text
-build/SpaceCubics_PDF_revx.pdf
-build/SpaceCubics_PDF_revx-print.pdf
-```
-
-Remove generated files with:
+To store generated files in another directory, override `BUILD_DIR`:
 
 ```sh
-make clean
+make all BUILD_DIR=output
+```
+
+The previous commands generate the following files when `OUTPUT` is
+`My_Document`:
+
+```text
+build/My_Document.pdf
+build/My_Document-print.pdf
 ```
