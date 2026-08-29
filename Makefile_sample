@@ -1,0 +1,31 @@
+# Copy this file to the root of a document repository as Makefile.
+#
+# The document source and images stay in that repository; themes, cover
+# templates, and build scripts are supplied by the shared PDF builder.
+PDF_BUILDER ?= sc-pdf-builder
+PDF_BUILDER_URL ?= https://github.com/spacecubics/sc-pdf-builder.git
+ADOC_SOURCE ?= src/index.adoc
+IMAGES_DIR  ?= images
+OUTPUT      ?= document
+BUILD_DIR   ?= build
+
+.PHONY: all pdf standard print clean ensure-builder
+
+all pdf standard print: ensure-builder
+
+all pdf standard print clean:
+	$(MAKE) -C "$(PDF_BUILDER)" $@ \
+	  ADOC_SOURCE="$(abspath $(ADOC_SOURCE))" \
+	  IMAGES_DIR="$(abspath $(IMAGES_DIR))" \
+	  BUILD_DIR="$(abspath $(BUILD_DIR))" \
+	  OUTPUT="$(OUTPUT)"
+
+ensure-builder:
+	@if [ -f "$(PDF_BUILDER)/Makefile" ]; then \
+	  :; \
+	elif [ -e "$(PDF_BUILDER)" ]; then \
+	  echo "error: $(PDF_BUILDER) exists but is not a PDF builder" >&2; \
+	  exit 1; \
+	else \
+	  git clone "$(PDF_BUILDER_URL)" "$(PDF_BUILDER)"; \
+	fi
