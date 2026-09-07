@@ -3,7 +3,7 @@ ADOC_SOURCE ?= src/index.adoc
 IMAGES_DIR  ?= images
 BUILD_DIR   ?= build
 XDG_DATA_HOME ?= $(HOME)/.local/share
-FONTS_DIR   ?= $(XDG_DATA_HOME)/fonts;$(HOME)/.fonts;/usr/local/share/fonts
+FONTS_DIR   ?= $(XDG_DATA_HOME)/fonts;$(HOME)/.fonts;/usr/local/share/fonts;/usr/share/fonts/opentype/ipaexfont-gothic
 THEME       ?= sc-docs
 
 # ADOC_SOURCE may name either an entry-point .adoc file or a directory that

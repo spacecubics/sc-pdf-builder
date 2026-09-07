@@ -9,7 +9,7 @@ IMAGES_DIR  ?= images
 OUTPUT      ?= document
 BUILD_DIR   ?= build
 XDG_DATA_HOME ?= $(HOME)/.local/share
-FONTS_DIR   ?= $(XDG_DATA_HOME)/fonts;$(HOME)/.fonts;/usr/local/share/fonts
+FONTS_DIR   ?= $(XDG_DATA_HOME)/fonts;$(HOME)/.fonts;/usr/local/share/fonts;/usr/share/fonts/opentype/ipaexfont-gothic
 THEME       ?= sc-docs
 
 .PHONY: all pdf standard print clean ensure-builder
