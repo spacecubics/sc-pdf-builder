@@ -274,3 +274,20 @@ Write your document here.
 Use `include::chapter.adoc[]` to split a document into chapters. The sample in
 `src/` demonstrates headings, text, figures, tables, code, equation syntax,
 admonitions, and links. Rendered equations are shown when `:stem:` is enabled.
+
+## Cover attributes
+
+The cover renderer reads these attributes from the entry-point file:
+
+| Attribute | Purpose | Special value |
+| --- | --- | --- |
+| `product-name` | Product or document family | |
+| `document-number` | Document identifier | |
+| `confidential-label` | Classification label | |
+| `cover-footer-text` | Cover footer text | |
+| `date` | Publication date | `BUILDDATE` uses today's date |
+| `revision` | Document revision | `GITHASH` uses the current Git revision |
+
+`GITHASH` gains a `-dirty` suffix when tracked files have uncommitted changes.
+The PDF theme reads `copyright-year` directly for the page footer; it is not a
+cover-renderer input.
