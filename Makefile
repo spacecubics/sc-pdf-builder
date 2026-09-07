@@ -5,6 +5,15 @@ BUILD_DIR   ?= build
 XDG_DATA_HOME ?= $(HOME)/.local/share
 FONTS_DIR   ?= $(XDG_DATA_HOME)/fonts;$(HOME)/.fonts;/usr/local/share/fonts;/usr/share/fonts/opentype/ipaexfont-gothic
 THEME       ?= sc-docs
+ifeq ($(V),1)
+Q           =
+QUIET_GEN   =
+QUIET_CLEAN =
+else
+Q           = @
+QUIET_GEN   = @echo '   ' GEN $@;
+QUIET_CLEAN = @echo '   ' CLEAN $(BUILD_DIR);
+endif
 
 # ADOC_SOURCE may name either an entry-point .adoc file or a directory that
 # contains index.adoc.
@@ -50,11 +59,11 @@ standard: $(STANDARD_PDF)
 pdf-print: $(PRINT_PDF)
 
 $(STANDARD_PDF): $(ADOC_FILES) $(STANDARD_COVER) $(PDF_ASSETS)
-	@mkdir -p "$(BUILD_DIR)"
-	@mkdir -p "$(dir $(RENDERED_COVER))"
-	$(RUBY) scripts/render_cover.rb \
+	$(Q)mkdir -p "$(BUILD_DIR)"
+	$(Q)mkdir -p "$(dir $(RENDERED_COVER))"
+	$(Q)$(RUBY) scripts/render_cover.rb \
 	  "$(STANDARD_COVER)" "$(RENDERED_COVER)" --adoc "$(ADOC_ENTRY)"
-	$(ASCIIDOCTOR_PDF) \
+	$(QUIET_GEN) $(ASCIIDOCTOR_PDF) \
 	  -r ./$(EXTENSION) \
 	  -r asciidoctor-mathematical \
 	  --failure-level WARN \
@@ -69,11 +78,11 @@ $(STANDARD_PDF): $(ADOC_FILES) $(STANDARD_COVER) $(PDF_ASSETS)
 	  "$(ADOC_ENTRY)"
 
 $(PRINT_PDF): $(ADOC_FILES) $(PRINT_COVER) $(PRINT_THEME) $(PDF_ASSETS)
-	@mkdir -p "$(BUILD_DIR)"
-	@mkdir -p "$(dir $(RENDERED_COVER))"
-	$(RUBY) scripts/render_cover.rb \
+	$(Q)mkdir -p "$(BUILD_DIR)"
+	$(Q)mkdir -p "$(dir $(RENDERED_COVER))"
+	$(Q)$(RUBY) scripts/render_cover.rb \
 	  "$(PRINT_COVER)" "$(RENDERED_COVER)" --adoc "$(ADOC_ENTRY)"
-	$(ASCIIDOCTOR_PDF) \
+	$(QUIET_GEN) $(ASCIIDOCTOR_PDF) \
 	  -r ./$(EXTENSION) \
 	  -r asciidoctor-mathematical \
 	  --failure-level WARN \
@@ -88,4 +97,4 @@ $(PRINT_PDF): $(ADOC_FILES) $(PRINT_COVER) $(PRINT_THEME) $(PDF_ASSETS)
 	  "$(ADOC_ENTRY)"
 
 clean:
-	$(RM) -r "$(BUILD_DIR)"
+	$(QUIET_CLEAN)$(RM) -r "$(BUILD_DIR)"

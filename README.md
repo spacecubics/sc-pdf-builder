@@ -180,6 +180,13 @@ make pdf-print # print-friendly variant
 make clean     # remove generated files
 ```
 
+Make prints only the generated PDF path by default. Use `V=1` to show the
+commands it runs:
+
+```sh
+bundle exec make V=1
+```
+
 ### Print-friendly variant
 
 Build the print-friendly PDF explicitly:

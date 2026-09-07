@@ -17,7 +17,7 @@ THEME       ?= sc-docs
 all pdf standard pdf-print: ensure-builder
 
 all pdf standard pdf-print clean:
-	$(MAKE) -C "$(PDF_BUILDER)" $@ \
+	@$(MAKE) --no-print-directory -C "$(PDF_BUILDER)" $@ \
 	  ADOC_SOURCE="$(abspath $(ADOC_SOURCE))" \
 	  IMAGES_DIR="$(abspath $(IMAGES_DIR))" \
 	  BUILD_DIR="$(abspath $(BUILD_DIR))" \
