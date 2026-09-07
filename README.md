@@ -229,3 +229,15 @@ with:
 ```sh
 BUNDLE_GEMFILE=sc-pdf-builder/Gemfile bundle exec make
 ```
+
+The supported variables are:
+
+| Variable | Meaning | Default |
+| --- | --- | --- |
+| `PDF_BUILDER` | Path to this repository | `sc-pdf-builder` |
+| `ADOC_SOURCE` | Entry-point `.adoc` file | `src/index.adoc` |
+| `IMAGES_DIR` | Directory for `image::` references | `images` |
+| `OUTPUT` | PDF basename, without `.pdf` | `document` |
+| `BUILD_DIR` | Generated-file directory | `build` |
+| `FONTS_DIR` | Semicolon-separated font directories; an override replaces all defaults | standard Linux font directories |
+| `THEME` | Theme basename | `sc-docs` |
