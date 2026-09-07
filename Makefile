@@ -27,6 +27,7 @@ ADOC_FILES := $(shell find "$(ADOC_DIR)" -type f -name '*.adoc' -print)
 
 STANDARD_PDF := $(BUILD_DIR)/$(OUTPUT).pdf
 PRINT_PDF    := $(BUILD_DIR)/$(OUTPUT)-print.pdf
+BUILD_CONFIG := $(BUILD_DIR)/.sc-pdf-builder-config
 
 ASCIIDOCTOR_PDF := asciidoctor-pdf
 RUBY            := ruby
@@ -47,7 +48,7 @@ PDF_ASSETS := $(shell find "$(IMAGES_DIR)" -type f -print) \
 	scripts/render_cover.rb $(EXTENSION)
 
 .NOTPARALLEL:
-.PHONY: all pdf standard pdf-print clean
+.PHONY: all pdf standard pdf-print clean FORCE
 
 all: standard
 
@@ -60,18 +61,33 @@ pdf-print: $(PRINT_PDF)
 $(BUILD_DIR):
 	$(Q)mkdir -p "$@"
 
+FORCE:
+
+$(BUILD_CONFIG): FORCE | $(BUILD_DIR)
+	$(Q)printf '%s\n' \
+	  'ADOC_ENTRY=$(abspath $(ADOC_ENTRY))' \
+	  'IMAGES_DIR=$(abspath $(IMAGES_DIR))' \
+	  'FONTS_DIR=$(FONTS_DIR)' \
+	  'THEME=$(THEME)' \
+	  'ASCIIDOCTOR_PDF=$(ASCIIDOCTOR_PDF)' > "$@.tmp"
+	$(Q)if ! cmp -s "$@.tmp" "$@"; then \
+	  mv "$@.tmp" "$@"; \
+	else \
+	  rm "$@.tmp"; \
+	fi
+
 $(STANDARD_RENDERED_COVER): $(STANDARD_COVER) $(ADOC_ENTRY) \
-	scripts/render_cover.rb | $(BUILD_DIR)
+	scripts/render_cover.rb $(BUILD_CONFIG) | $(BUILD_DIR)
 	$(QUIET_GEN) $(RUBY) scripts/render_cover.rb \
 	  "$(STANDARD_COVER)" "$@" --adoc "$(ADOC_ENTRY)"
 
 $(PRINT_RENDERED_COVER): $(PRINT_COVER) $(ADOC_ENTRY) \
-	scripts/render_cover.rb | $(BUILD_DIR)
+	scripts/render_cover.rb $(BUILD_CONFIG) | $(BUILD_DIR)
 	$(QUIET_GEN) $(RUBY) scripts/render_cover.rb \
 	  "$(PRINT_COVER)" "$@" --adoc "$(ADOC_ENTRY)"
 
 $(STANDARD_PDF): $(ADOC_FILES) $(STANDARD_RENDERED_COVER) $(STANDARD_THEME) \
-	$(PDF_ASSETS) | $(BUILD_DIR)
+	$(PDF_ASSETS) $(BUILD_CONFIG) | $(BUILD_DIR)
 	$(QUIET_GEN) $(ASCIIDOCTOR_PDF) \
 	  -r ./$(EXTENSION) \
 	  -r asciidoctor-mathematical \
@@ -88,7 +104,7 @@ $(STANDARD_PDF): $(ADOC_FILES) $(STANDARD_RENDERED_COVER) $(STANDARD_THEME) \
 	  "$(ADOC_ENTRY)"
 
 $(PRINT_PDF): $(ADOC_FILES) $(PRINT_RENDERED_COVER) $(STANDARD_THEME) \
-	$(PRINT_THEME) $(PDF_ASSETS) | $(BUILD_DIR)
+	$(PRINT_THEME) $(PDF_ASSETS) $(BUILD_CONFIG) | $(BUILD_DIR)
 	$(QUIET_GEN) $(ASCIIDOCTOR_PDF) \
 	  -r ./$(EXTENSION) \
 	  -r asciidoctor-mathematical \

@@ -249,6 +249,11 @@ The supported variables are:
 | `FONTS_DIR` | Semicolon-separated font directories; an override replaces all defaults | standard Linux font directories |
 | `THEME` | Theme basename | `sc-docs` |
 
+The builder records content-affecting settings in `BUILD_DIR`. Changing the
+document entry point, image or font directories, or theme causes Make to
+regenerate the PDF even when the existing output is newer than the newly
+selected inputs.
+
 ## Start a document
 
 The entry-point file holds the title, document settings, and chapter includes.
