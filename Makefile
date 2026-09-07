@@ -56,6 +56,7 @@ $(STANDARD_PDF): $(ADOC_FILES) $(STANDARD_COVER) $(PDF_ASSETS)
 	  --trace \
 	  -a reproducible \
 	  -a imagesdir="$(abspath $(IMAGES_DIR))" \
+	  -a imagesoutdir="$(abspath $(BUILD_DIR))" \
 	  -a pdf-theme=sc-docs \
 	  -a pdf-themesdir="$(THEMES_DIR)" \
 	  -D "$(BUILD_DIR)" \
@@ -74,6 +75,7 @@ $(PRINT_PDF): $(ADOC_FILES) $(PRINT_COVER) $(PRINT_THEME) $(PDF_ASSETS)
 	  --trace \
 	  -a reproducible \
 	  -a imagesdir="$(abspath $(IMAGES_DIR))" \
+	  -a imagesoutdir="$(abspath $(BUILD_DIR))" \
 	  -a pdf-theme=sc-docs-print \
 	  -a pdf-themesdir="$(THEMES_DIR)" \
 	  -D "$(BUILD_DIR)" \
