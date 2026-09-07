@@ -71,6 +71,7 @@ $(STANDARD_PDF): $(ADOC_FILES) $(STANDARD_COVER) $(PDF_ASSETS)
 	  -a reproducible \
 	  -a imagesdir="$(abspath $(IMAGES_DIR))" \
 	  -a imagesoutdir="$(abspath $(BUILD_DIR))" \
+	  -a pdf-cover-image="$(abspath $(RENDERED_COVER))" \
 	  $(FONT_OPTION) \
 	  -a pdf-theme="$(THEME)" \
 	  -a pdf-themesdir="$(THEMES_DIR)" \
@@ -90,6 +91,7 @@ $(PRINT_PDF): $(ADOC_FILES) $(PRINT_COVER) $(PRINT_THEME) $(PDF_ASSETS)
 	  -a reproducible \
 	  -a imagesdir="$(abspath $(IMAGES_DIR))" \
 	  -a imagesoutdir="$(abspath $(BUILD_DIR))" \
+	  -a pdf-cover-image="$(abspath $(RENDERED_COVER))" \
 	  $(FONT_OPTION) \
 	  -a pdf-theme="$(THEME)-print" \
 	  -a pdf-themesdir="$(THEMES_DIR)" \

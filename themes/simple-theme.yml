@@ -59,7 +59,7 @@ heading:
     font-size: 12
 
 title-page:
-  background-image: image:../build/cover.svg[]
+  background-image: image:{pdf-cover-image}[]
   align: left
   logo:
     top: 13%
