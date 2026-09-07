@@ -17,7 +17,6 @@ blocks, admonitions, and links.
 The build requires the following tools:
 
 - GNU Make
-- Python 3
 - Ruby
 - Asciidoctor PDF
 - Rouge
@@ -26,7 +25,7 @@ On Debian or Ubuntu, install the basic tools with:
 
 ```sh
 sudo apt update
-sudo apt install make python3 ruby ruby-dev build-essential
+sudo apt install make ruby ruby-dev build-essential
 ```
 
 Install the required Ruby gems with:
@@ -40,7 +39,6 @@ gem install asciidoctor-pdf rouge
 The PDFs have been successfully built with:
 
 - GNU Make 4.4.1
-- Python 3.13.5
 - Ruby 3.3.8
 - Asciidoctor PDF 2.3.24
 - Asciidoctor 2.0.23

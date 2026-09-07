@@ -17,7 +17,7 @@ STANDARD_PDF := $(BUILD_DIR)/$(OUTPUT).pdf
 PRINT_PDF    := $(BUILD_DIR)/$(OUTPUT)-print.pdf
 
 ASCIIDOCTOR_PDF := asciidoctor-pdf
-PYTHON          := python3
+RUBY            := ruby
 EXTENSION       := scripts/asciidoctor_extensions/small_element.rb
 THEMES_DIR      := themes
 
@@ -31,7 +31,7 @@ STANDARD_THEME := $(THEMES_DIR)/sc-docs-theme.yml
 PRINT_THEME    := $(THEMES_DIR)/sc-docs-print-theme.yml
 
 PDF_ASSETS := $(shell find "$(IMAGES_DIR)" -type f -print) \
-	$(STANDARD_THEME) scripts/render_cover.py $(EXTENSION)
+	$(STANDARD_THEME) scripts/render_cover.rb $(EXTENSION)
 
 .NOTPARALLEL:
 .PHONY: all pdf standard print clean
@@ -47,7 +47,7 @@ print: $(PRINT_PDF)
 $(STANDARD_PDF): $(ADOC_FILES) $(STANDARD_COVER) $(PDF_ASSETS)
 	@mkdir -p "$(BUILD_DIR)"
 	@mkdir -p "$(dir $(RENDERED_COVER))"
-	$(PYTHON) scripts/render_cover.py \
+	$(RUBY) scripts/render_cover.rb \
 	  "$(STANDARD_COVER)" "$(RENDERED_COVER)" --adoc "$(ADOC_ENTRY)"
 	$(ASCIIDOCTOR_PDF) \
 	  -r ./$(EXTENSION) \
@@ -65,7 +65,7 @@ $(STANDARD_PDF): $(ADOC_FILES) $(STANDARD_COVER) $(PDF_ASSETS)
 $(PRINT_PDF): $(ADOC_FILES) $(PRINT_COVER) $(PRINT_THEME) $(PDF_ASSETS)
 	@mkdir -p "$(BUILD_DIR)"
 	@mkdir -p "$(dir $(RENDERED_COVER))"
-	$(PYTHON) scripts/render_cover.py \
+	$(RUBY) scripts/render_cover.rb \
 	  "$(PRINT_COVER)" "$(RENDERED_COVER)" --adoc "$(ADOC_ENTRY)"
 	$(ASCIIDOCTOR_PDF) \
 	  -r ./$(EXTENSION) \
