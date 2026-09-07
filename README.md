@@ -248,3 +248,29 @@ The supported variables are:
 | `BUILD_DIR` | Generated-file directory | `build` |
 | `FONTS_DIR` | Semicolon-separated font directories; an override replaces all defaults | standard Linux font directories |
 | `THEME` | Theme basename | `sc-docs` |
+
+## Start a document
+
+The entry-point file holds the title, document settings, and chapter includes.
+A minimal example is:
+
+```asciidoc
+= Hardware Manual
+:author: Space Cubics Inc.
+:product-name: My Product
+:document-number: SC-DOC-001
+:date: BUILDDATE
+:revision: GITHASH
+:copyright-year: 2026
+:doctype: book
+:scripts: cjk
+:toc:
+
+== Introduction
+
+Write your document here.
+```
+
+Use `include::chapter.adoc[]` to split a document into chapters. The sample in
+`src/` demonstrates headings, text, figures, tables, code, equation syntax,
+admonitions, and links. Rendered equations are shown when `:stem:` is enabled.
