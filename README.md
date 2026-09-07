@@ -8,9 +8,9 @@ Use them as they are, or adapt them to the requirements of your document.
 The template produces a standard PDF and a print-friendly PDF whose cover
 uses less solid-color fill.
 
-For examples of AsciiDoc syntax, build the sample document and read the
-generated PDF. It covers titles, paragraphs, lists, figures, tables, code
-blocks, admonitions, and links.
+The PDF toolchain is Ruby-based. Bundler can isolate Ruby gems inside this
+repository under `vendor/bundle`. It is recommended, but optional: the build
+can also use the active Ruby environment directly.
 
 ## Get a first PDF on Debian or Ubuntu
 
