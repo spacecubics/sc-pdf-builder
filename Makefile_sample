@@ -10,6 +10,7 @@ OUTPUT      ?= document
 BUILD_DIR   ?= build
 XDG_DATA_HOME ?= $(HOME)/.local/share
 FONTS_DIR   ?= $(XDG_DATA_HOME)/fonts;$(HOME)/.fonts;/usr/local/share/fonts
+THEME       ?= sc-docs
 
 .PHONY: all pdf standard print clean ensure-builder
 
@@ -21,6 +22,7 @@ all pdf standard print clean:
 	  IMAGES_DIR="$(abspath $(IMAGES_DIR))" \
 	  BUILD_DIR="$(abspath $(BUILD_DIR))" \
 	  FONTS_DIR="$(FONTS_DIR)" \
+	  THEME="$(THEME)" \
 	  OUTPUT="$(OUTPUT)"
 
 ensure-builder:

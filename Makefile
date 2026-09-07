@@ -4,6 +4,7 @@ IMAGES_DIR  ?= images
 BUILD_DIR   ?= build
 XDG_DATA_HOME ?= $(HOME)/.local/share
 FONTS_DIR   ?= $(XDG_DATA_HOME)/fonts;$(HOME)/.fonts;/usr/local/share/fonts
+THEME       ?= sc-docs
 
 # ADOC_SOURCE may name either an entry-point .adoc file or a directory that
 # contains index.adoc.
@@ -31,8 +32,8 @@ PRINT_COVER    := images/cover-print.svg.in
 # directory. Keep this intermediate asset with the builder even when PDF
 # outputs are written to a document repository's BUILD_DIR.
 RENDERED_COVER := build/cover.svg
-STANDARD_THEME := $(THEMES_DIR)/sc-docs-theme.yml
-PRINT_THEME    := $(THEMES_DIR)/sc-docs-print-theme.yml
+STANDARD_THEME := $(THEMES_DIR)/$(THEME)-theme.yml
+PRINT_THEME    := $(THEMES_DIR)/$(THEME)-print-theme.yml
 
 PDF_ASSETS := $(shell find "$(IMAGES_DIR)" -type f -print) \
 	$(STANDARD_THEME) scripts/render_cover.rb $(EXTENSION)
@@ -62,7 +63,7 @@ $(STANDARD_PDF): $(ADOC_FILES) $(STANDARD_COVER) $(PDF_ASSETS)
 	  -a imagesdir="$(abspath $(IMAGES_DIR))" \
 	  -a imagesoutdir="$(abspath $(BUILD_DIR))" \
 	  $(FONT_OPTION) \
-	  -a pdf-theme=sc-docs \
+	  -a pdf-theme="$(THEME)" \
 	  -a pdf-themesdir="$(THEMES_DIR)" \
 	  -D "$(BUILD_DIR)" \
 	  -o "$(notdir $@)" \
@@ -82,7 +83,7 @@ $(PRINT_PDF): $(ADOC_FILES) $(PRINT_COVER) $(PRINT_THEME) $(PDF_ASSETS)
 	  -a imagesdir="$(abspath $(IMAGES_DIR))" \
 	  -a imagesoutdir="$(abspath $(BUILD_DIR))" \
 	  $(FONT_OPTION) \
-	  -a pdf-theme=sc-docs-print \
+	  -a pdf-theme="$(THEME)-print" \
 	  -a pdf-themesdir="$(THEMES_DIR)" \
 	  -D "$(BUILD_DIR)" \
 	  -o "$(notdir $@)" \
