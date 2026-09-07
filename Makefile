@@ -39,15 +39,15 @@ PDF_ASSETS := $(shell find "$(IMAGES_DIR)" -type f -print) \
 	$(STANDARD_THEME) scripts/render_cover.rb $(EXTENSION)
 
 .NOTPARALLEL:
-.PHONY: all pdf standard print clean
+.PHONY: all pdf standard pdf-print clean
 
-all: standard print
+all: standard
 
 pdf: standard
 
 standard: $(STANDARD_PDF)
 
-print: $(PRINT_PDF)
+pdf-print: $(PRINT_PDF)
 
 $(STANDARD_PDF): $(ADOC_FILES) $(STANDARD_COVER) $(PDF_ASSETS)
 	@mkdir -p "$(BUILD_DIR)"

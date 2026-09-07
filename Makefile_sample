@@ -12,11 +12,11 @@ XDG_DATA_HOME ?= $(HOME)/.local/share
 FONTS_DIR   ?= $(XDG_DATA_HOME)/fonts;$(HOME)/.fonts;/usr/local/share/fonts;/usr/share/fonts/opentype/ipaexfont-gothic
 THEME       ?= sc-docs
 
-.PHONY: all pdf standard print clean ensure-builder
+.PHONY: all pdf standard pdf-print clean ensure-builder
 
-all pdf standard print: ensure-builder
+all pdf standard pdf-print: ensure-builder
 
-all pdf standard print clean:
+all pdf standard pdf-print clean:
 	$(MAKE) -C "$(PDF_BUILDER)" $@ \
 	  ADOC_SOURCE="$(abspath $(ADOC_SOURCE))" \
 	  IMAGES_DIR="$(abspath $(IMAGES_DIR))" \

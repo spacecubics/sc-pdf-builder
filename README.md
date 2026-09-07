@@ -157,44 +157,41 @@ every PDF build. Enable equation rendering in a document with:
 The included example enables both attributes. A document that does not set
 `:stem:` builds normally without rendering equations.
 
-## Building PDFs
+## Build the included example
 
-Create a `Makefile` in the root of a document repository, then use it to build
-the PDFs. Start by cloning the PDF builder and copying its sample Makefile:
-
-```sh
-git clone {sc-pdf-builder URL}
-cp sc-pdf-builder/Makefile_sample Makefile
-make ADOC_SOURCE=path/to/document.adoc \
-  IMAGES_DIR=path/to/images
-```
-
-The command builds both PDF variants in the document repository's `build/`
-directory. Build only the standard PDF with:
+After completing the Space Cubics setup above, build the included example
+with:
 
 ```sh
-make pdf
+bundle exec make
 ```
 
-To build the sample document included with the PDF builder, use its source and
-image directories:
+The generated file is:
+
+```text
+build/SpaceCubics_PDF_revx.pdf
+```
+
+Other useful targets are:
 
 ```sh
-make ADOC_SOURCE=sc-pdf-builder/src/index.adoc \
-  IMAGES_DIR=sc-pdf-builder/images
+make pdf       # standard PDF only
+make pdf-print # print-friendly variant
+make clean     # remove generated files
 ```
 
-Build the print-friendly PDF with:
+### Print-friendly variant
+
+Build the print-friendly PDF explicitly:
 
 ```sh
-make print
+bundle exec make pdf-print
 ```
 
-Remove generated files with:
-
-```sh
-make clean
-```
+This generates `build/SpaceCubics_PDF_revx-print.pdf`. It has a white cover
+with dark text and logo artwork, reducing toner or ink use. The standard PDF
+has a dark cover with white text and logo artwork. The document body is the
+same in both variants.
 
 ### Configure the build
 
