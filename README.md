@@ -193,6 +193,24 @@ with dark text and logo artwork, reducing toner or ink use. The standard PDF
 has a dark cover with white text and logo artwork. The document body is the
 same in both variants.
 
+## Use the builder in a document repository
+
+Clone this repository into the root of your document repository and copy the
+sample Makefile:
+
+```sh
+git clone https://github.com/spacecubics/sc-pdf-builder.git
+cp sc-pdf-builder/Makefile_sample Makefile
+cd sc-pdf-builder
+bundle config set --local path vendor/bundle
+CMAKE_POLICY_VERSION_MINIMUM=3.5 \
+CMAKE_GENERATOR="Unix Makefiles" \
+bundle install
+cd ..
+BUNDLE_GEMFILE=sc-pdf-builder/Gemfile bundle exec make \
+  THEME=simple
+```
+
 ### Configure the build
 
 `Makefile_sample` supplies the following variables. Override a variable on the
