@@ -8,7 +8,7 @@
 :cover-footer-text: PART NUMBER: SC-OBC-A0001
 :copyright-year: 2026
 :doctype: book
-:scripts: cjk
+:lang: ja
 :title-separator: :
 :toc:
 :toc-title: Table of Contents

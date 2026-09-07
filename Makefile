@@ -32,6 +32,7 @@ BUILD_CONFIG := $(BUILD_DIR)/.sc-pdf-builder-config
 ASCIIDOCTOR_PDF := asciidoctor-pdf
 RUBY            := ruby
 EXTENSION       := scripts/asciidoctor_extensions/small_element.rb
+KINSOKU_EXT     := scripts/asciidoctor_extensions/japanese_line_wrap.rb
 THEMES_DIR      := themes
 
 FONT_OPTION := $(if $(strip $(FONTS_DIR)),-a pdf-fontsdir="$(FONTS_DIR)")
@@ -45,7 +46,7 @@ STANDARD_THEME := $(THEMES_DIR)/$(THEME)-theme.yml
 PRINT_THEME    := $(THEMES_DIR)/$(THEME)-print-theme.yml
 
 PDF_ASSETS := $(shell find "$(IMAGES_DIR)" -type f -print) \
-	scripts/render_cover.rb $(EXTENSION)
+	scripts/render_cover.rb $(EXTENSION) $(KINSOKU_EXT)
 
 .NOTPARALLEL:
 .PHONY: all pdf standard pdf-print clean FORCE
@@ -90,6 +91,7 @@ $(STANDARD_PDF): $(ADOC_FILES) $(STANDARD_RENDERED_COVER) $(STANDARD_THEME) \
 	$(PDF_ASSETS) $(BUILD_CONFIG) | $(BUILD_DIR)
 	$(QUIET_GEN) $(ASCIIDOCTOR_PDF) \
 	  -r ./$(EXTENSION) \
+	  -r ./$(KINSOKU_EXT) \
 	  -r asciidoctor-mathematical \
 	  --failure-level WARN \
 	  --trace \
@@ -107,6 +109,7 @@ $(PRINT_PDF): $(ADOC_FILES) $(PRINT_RENDERED_COVER) $(STANDARD_THEME) \
 	$(PRINT_THEME) $(PDF_ASSETS) $(BUILD_CONFIG) | $(BUILD_DIR)
 	$(QUIET_GEN) $(ASCIIDOCTOR_PDF) \
 	  -r ./$(EXTENSION) \
+	  -r ./$(KINSOKU_EXT) \
 	  -r asciidoctor-mathematical \
 	  --failure-level WARN \
 	  --trace \
