@@ -12,37 +12,52 @@ For examples of AsciiDoc syntax, build the sample document and read the
 generated PDF. It covers titles, paragraphs, lists, figures, tables, code
 blocks, admonitions, and links.
 
-## Requirements
+## Set up
 
-The build requires the following tools:
-
-- GNU Make
-- Ruby
-- Asciidoctor PDF
-- Rouge
-
-On Debian or Ubuntu, install the basic tools with:
+The documented setup uses Bundler to install the Ruby dependencies inside the
+repository. Asciidoctor Mathematical includes a native extension, so install
+its build requirements with the basic tools:
 
 ```sh
 sudo apt update
-sudo apt install make ruby ruby-dev build-essential
+sudo apt install \
+  make ruby bundler git \
+  ruby-dev build-essential cmake bison flex \
+  libglib2.0-dev libgdk-pixbuf-2.0-dev libcairo2-dev libpango1.0-dev \
+  libxml2-dev libffi-dev fonts-lyx
 ```
 
-Install the required Ruby gems with:
+`fonts-lyx` supplies the Computer Modern and symbol TTF files used by the
+equation renderer.
+
+Clone the repository, configure a repository-local gem directory, and install
+the declared dependencies:
 
 ```sh
-gem install asciidoctor-pdf rouge
+git clone https://github.com/spacecubics/sc-pdf-builder.git
+cd sc-pdf-builder
+bundle config set --local path vendor/bundle
+CMAKE_POLICY_VERSION_MINIMUM=3.5 \
+CMAKE_GENERATOR="Unix Makefiles" \
+bundle install
+bundle exec make
 ```
 
-## Tested Versions
+`bundle config set --local` writes the setting to `.bundle/config` in this
+repository. Both `.bundle/` and `vendor/bundle/` are ignored by Git. No gems
+are installed globally. Bundler-generated lock files are also local and
+ignored by Git.
 
-The PDFs have been successfully built with:
+Mathematical's bundled CMake files declare compatibility with CMake 2.8.7,
+which CMake 4 rejects. `CMAKE_POLICY_VERSION_MINIMUM=3.5` tells current CMake
+to apply policies from version 3.5. Mathematical invokes `make` directly after
+configuration, so `CMAKE_GENERATOR="Unix Makefiles"` ensures that CMake creates
+the Makefiles its installer expects.
 
-- GNU Make 4.4.1
-- Ruby 3.3.8
-- Asciidoctor PDF 2.3.24
-- Asciidoctor 2.0.23
-- Rouge 4.7.0
+Bundler is optional. If you are familiar with Ruby development environments,
+install the dependencies declared in `Gemfile` with rbenv, RVM, chruby, a
+container, or another preferred workflow. The Makefile invokes Ruby and
+Asciidoctor PDF directly, so run the same Make command inside that environment.
 
 ## Fonts
 
