@@ -211,48 +211,21 @@ BUNDLE_GEMFILE=sc-pdf-builder/Gemfile bundle exec make \
   THEME=simple
 ```
 
-### Configure the build
-
-`Makefile_sample` supplies the following variables. Override a variable on the
-command line for a single build, or set its value in the document repository's
-`Makefile` to make the setting permanent.
-
-- `PDF_BUILDER` is the path to the cloned builder. Its default is
-  `sc-pdf-builder`.
-- `ADOC_SOURCE` is the entry-point `.adoc` file. Its default is
-  `src/index.adoc`. All `.adoc` files in its directory and subdirectories are
-  build dependencies.
-- `IMAGES_DIR` is the directory used for `image::` references. Its default is
-  `images`.
-- `OUTPUT` is the base name of the generated PDFs, without the `.pdf`
-  extension. Its default is `document`.
-- `BUILD_DIR` is the output directory. Its default is `build`.
-
-For example, build a document whose source and images are in custom locations:
+The sample Makefile expects `src/index.adoc` and `images/` in the document
+repository. You can change these defaults in the copied Makefile or override
+them for one build:
 
 ```sh
-make pdf ADOC_SOURCE=docs/manual/manual.adoc \
-  IMAGES_DIR=docs/assets OUTPUT=My_Document
+BUNDLE_GEMFILE=sc-pdf-builder/Gemfile bundle exec make pdf \
+  THEME=simple \
+  ADOC_SOURCE=docs/manual/manual.adoc \
+  IMAGES_DIR=docs/assets \
+  OUTPUT=Hardware_Manual
 ```
 
-This command generates `build/My_Document.pdf`. The same settings apply to
-the print-friendly PDF and both PDF variants:
+After installing Noto Sans JP and Sarasa Mono J, use the Space Cubics defaults
+with:
 
 ```sh
-make print OUTPUT=My_Document
-make all OUTPUT=My_Document
-```
-
-To store generated files in another directory, override `BUILD_DIR`:
-
-```sh
-make all BUILD_DIR=output
-```
-
-The previous commands generate the following files when `OUTPUT` is
-`My_Document`:
-
-```text
-build/My_Document.pdf
-build/My_Document-print.pdf
+BUNDLE_GEMFILE=sc-pdf-builder/Gemfile bundle exec make
 ```
