@@ -65,8 +65,7 @@ $(STANDARD_PDF): $(ADOC_FILES) $(STANDARD_COVER) $(PDF_ASSETS)
 	  $(FONT_OPTION) \
 	  -a pdf-theme="$(THEME)" \
 	  -a pdf-themesdir="$(THEMES_DIR)" \
-	  -D "$(BUILD_DIR)" \
-	  -o "$(notdir $@)" \
+	  -o "$@" \
 	  "$(ADOC_ENTRY)"
 
 $(PRINT_PDF): $(ADOC_FILES) $(PRINT_COVER) $(PRINT_THEME) $(PDF_ASSETS)
@@ -85,8 +84,7 @@ $(PRINT_PDF): $(ADOC_FILES) $(PRINT_COVER) $(PRINT_THEME) $(PDF_ASSETS)
 	  $(FONT_OPTION) \
 	  -a pdf-theme="$(THEME)-print" \
 	  -a pdf-themesdir="$(THEMES_DIR)" \
-	  -D "$(BUILD_DIR)" \
-	  -o "$(notdir $@)" \
+	  -o "$@" \
 	  "$(ADOC_ENTRY)"
 
 clean:
