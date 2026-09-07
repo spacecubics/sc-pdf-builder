@@ -268,7 +268,7 @@ A minimal example is:
 :revision: GITHASH
 :copyright-year: 2026
 :doctype: book
-:scripts: cjk
+:lang: ja
 :toc:
 
 == Introduction
@@ -279,6 +279,19 @@ Write your document here.
 Use `include::chapter.adoc[]` to split a document into chapters. The sample in
 `src/` demonstrates headings, text, figures, tables, code, equation syntax,
 admonitions, and links. Rendered equations are shown when `:stem:` is enabled.
+
+The builder loads its Japanese line-breaking extension for every PDF build.
+Setting `:lang: ja` activates Japanese line-start, line-end, and inseparable
+character rules. At a prohibited boundary, the extension uses push-out to move
+the inseparable character sequence to the next line. It does not implement
+character compression or hanging punctuation.
+
+For a non-Japanese CJK document, omit `:lang: ja` and use Asciidoctor PDF's
+generic CJK wrapping instead:
+
+```asciidoc
+:scripts: cjk
+```
 
 ## Cover attributes
 
