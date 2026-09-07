@@ -291,3 +291,13 @@ The cover renderer reads these attributes from the entry-point file:
 `GITHASH` gains a `-dirty` suffix when tracked files have uncommitted changes.
 The PDF theme reads `copyright-year` directly for the page footer; it is not a
 cover-renderer input.
+
+## Customize the output
+
+Edit `themes/sc-docs-theme.yml` to change typography, spacing, headers,
+tables, code, and other page styles. The print theme inherits it from
+`themes/sc-docs-print-theme.yml`.
+
+Edit `images/cover-standard.svg.in` and `images/cover-print.svg.in` to change
+the cover layout. Preserve placeholders such as `@DOCUMENT_NUMBER@`; the
+build replaces them with document attributes.
