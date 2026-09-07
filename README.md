@@ -180,8 +180,8 @@ make pdf-print # print-friendly variant
 make clean     # remove generated files
 ```
 
-Make prints only the generated PDF path by default. Use `V=1` to show the
-commands it runs:
+Make prints a `GEN` line for the rendered cover and PDF by default. Use `V=1`
+to show the commands it runs instead:
 
 ```sh
 bundle exec make V=1

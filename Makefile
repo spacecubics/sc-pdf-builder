@@ -37,15 +37,14 @@ FONT_OPTION := $(if $(strip $(FONTS_DIR)),-a pdf-fontsdir="$(FONTS_DIR)")
 
 STANDARD_COVER := images/cover-standard.svg.in
 PRINT_COVER    := images/cover-print.svg.in
-# The bundled themes resolve the cover relative to the builder's themes/
-# directory. Keep this intermediate asset with the builder even when PDF
-# outputs are written to a document repository's BUILD_DIR.
-RENDERED_COVER := build/cover.svg
+# The generated covers are intermediate inputs to Asciidoctor PDF.
+STANDARD_RENDERED_COVER := $(BUILD_DIR)/cover-standard.svg
+PRINT_RENDERED_COVER    := $(BUILD_DIR)/cover-print.svg
 STANDARD_THEME := $(THEMES_DIR)/$(THEME)-theme.yml
 PRINT_THEME    := $(THEMES_DIR)/$(THEME)-print-theme.yml
 
 PDF_ASSETS := $(shell find "$(IMAGES_DIR)" -type f -print) \
-	$(STANDARD_THEME) scripts/render_cover.rb $(EXTENSION)
+	scripts/render_cover.rb $(EXTENSION)
 
 .NOTPARALLEL:
 .PHONY: all pdf standard pdf-print clean
@@ -58,11 +57,21 @@ standard: $(STANDARD_PDF)
 
 pdf-print: $(PRINT_PDF)
 
-$(STANDARD_PDF): $(ADOC_FILES) $(STANDARD_COVER) $(PDF_ASSETS)
-	$(Q)mkdir -p "$(BUILD_DIR)"
-	$(Q)mkdir -p "$(dir $(RENDERED_COVER))"
-	$(Q)$(RUBY) scripts/render_cover.rb \
-	  "$(STANDARD_COVER)" "$(RENDERED_COVER)" --adoc "$(ADOC_ENTRY)"
+$(BUILD_DIR):
+	$(Q)mkdir -p "$@"
+
+$(STANDARD_RENDERED_COVER): $(STANDARD_COVER) $(ADOC_ENTRY) \
+	scripts/render_cover.rb | $(BUILD_DIR)
+	$(QUIET_GEN) $(RUBY) scripts/render_cover.rb \
+	  "$(STANDARD_COVER)" "$@" --adoc "$(ADOC_ENTRY)"
+
+$(PRINT_RENDERED_COVER): $(PRINT_COVER) $(ADOC_ENTRY) \
+	scripts/render_cover.rb | $(BUILD_DIR)
+	$(QUIET_GEN) $(RUBY) scripts/render_cover.rb \
+	  "$(PRINT_COVER)" "$@" --adoc "$(ADOC_ENTRY)"
+
+$(STANDARD_PDF): $(ADOC_FILES) $(STANDARD_RENDERED_COVER) $(STANDARD_THEME) \
+	$(PDF_ASSETS) | $(BUILD_DIR)
 	$(QUIET_GEN) $(ASCIIDOCTOR_PDF) \
 	  -r ./$(EXTENSION) \
 	  -r asciidoctor-mathematical \
@@ -71,18 +80,15 @@ $(STANDARD_PDF): $(ADOC_FILES) $(STANDARD_COVER) $(PDF_ASSETS)
 	  -a reproducible \
 	  -a imagesdir="$(abspath $(IMAGES_DIR))" \
 	  -a imagesoutdir="$(abspath $(BUILD_DIR))" \
-	  -a pdf-cover-image="$(abspath $(RENDERED_COVER))" \
+	  -a pdf-cover-image="$(abspath $(STANDARD_RENDERED_COVER))" \
 	  $(FONT_OPTION) \
 	  -a pdf-theme="$(THEME)" \
 	  -a pdf-themesdir="$(THEMES_DIR)" \
 	  -o "$@" \
 	  "$(ADOC_ENTRY)"
 
-$(PRINT_PDF): $(ADOC_FILES) $(PRINT_COVER) $(PRINT_THEME) $(PDF_ASSETS)
-	$(Q)mkdir -p "$(BUILD_DIR)"
-	$(Q)mkdir -p "$(dir $(RENDERED_COVER))"
-	$(Q)$(RUBY) scripts/render_cover.rb \
-	  "$(PRINT_COVER)" "$(RENDERED_COVER)" --adoc "$(ADOC_ENTRY)"
+$(PRINT_PDF): $(ADOC_FILES) $(PRINT_RENDERED_COVER) $(STANDARD_THEME) \
+	$(PRINT_THEME) $(PDF_ASSETS) | $(BUILD_DIR)
 	$(QUIET_GEN) $(ASCIIDOCTOR_PDF) \
 	  -r ./$(EXTENSION) \
 	  -r asciidoctor-mathematical \
@@ -91,7 +97,7 @@ $(PRINT_PDF): $(ADOC_FILES) $(PRINT_COVER) $(PRINT_THEME) $(PDF_ASSETS)
 	  -a reproducible \
 	  -a imagesdir="$(abspath $(IMAGES_DIR))" \
 	  -a imagesoutdir="$(abspath $(BUILD_DIR))" \
-	  -a pdf-cover-image="$(abspath $(RENDERED_COVER))" \
+	  -a pdf-cover-image="$(abspath $(PRINT_RENDERED_COVER))" \
 	  $(FONT_OPTION) \
 	  -a pdf-theme="$(THEME)-print" \
 	  -a pdf-themesdir="$(THEMES_DIR)" \
