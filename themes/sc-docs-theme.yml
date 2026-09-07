@@ -9,16 +9,17 @@ page:
 
 font:
   catalog:
+    merge: true
     Noto Sans JP:
-      normal: /usr/share/fonts/truetype/Noto_Sans_JP/NotoSansJP-Regular.ttf
-      italic: /usr/share/fonts/truetype/Noto_Sans_JP/NotoSansJP-Regular.ttf
-      bold: /usr/share/fonts/truetype/Noto_Sans_JP/NotoSansJP-Bold.ttf
-      bold_italic: /usr/share/fonts/truetype/Noto_Sans_JP/NotoSansJP-Bold.ttf
+      normal: NotoSansJP-Regular.ttf
+      italic: NotoSansJP-Regular.ttf
+      bold: NotoSansJP-Bold.ttf
+      bold_italic: NotoSansJP-Bold.ttf
     Sarasa Mono J:
-      normal: /usr/share/fonts/truetype/SarasaMonoJ/SarasaMonoJ-Regular.ttf
-      italic: /usr/share/fonts/truetype/SarasaMonoJ/SarasaMonoJ-Italic.ttf
-      bold: /usr/share/fonts/truetype/SarasaMonoJ/SarasaMonoJ-Bold.ttf
-      bold_italic: /usr/share/fonts/truetype/SarasaMonoJ/SarasaMonoJ-BoldItalic.ttf
+      normal: SarasaMonoJ-Regular.ttf
+      italic: SarasaMonoJ-Italic.ttf
+      bold: SarasaMonoJ-Bold.ttf
+      bold_italic: SarasaMonoJ-BoldItalic.ttf
   fallbacks: [Noto Sans JP]
 
 base:

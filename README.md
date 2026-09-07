@@ -61,32 +61,67 @@ Asciidoctor PDF directly, so run the same Make command inside that environment.
 
 ## Fonts
 
-The sample theme uses the following fonts:
+The theme uses:
 
-- Noto Sans JP for normal text, headings, tables, and page furniture
-- Sarasa Mono J for code blocks and inline code
+- Noto Sans JP Regular and Bold for body text
+- Sarasa Mono J for code
 
-The fonts are not included in this repository. The theme currently expects
-the following files:
+Debian does not package the standalone static TTF files required by Prawn.
+Create Regular and Bold files from Noto's official variable TTF with Debian's
+FontTools package:
 
-```text
-/usr/share/fonts/truetype/Noto_Sans_JP/NotoSansJP-Regular.ttf
-/usr/share/fonts/truetype/Noto_Sans_JP/NotoSansJP-Bold.ttf
-/usr/share/fonts/truetype/SarasaMonoJ/SarasaMonoJ-Regular.ttf
-/usr/share/fonts/truetype/SarasaMonoJ/SarasaMonoJ-Italic.ttf
-/usr/share/fonts/truetype/SarasaMonoJ/SarasaMonoJ-Bold.ttf
-/usr/share/fonts/truetype/SarasaMonoJ/SarasaMonoJ-BoldItalic.ttf
+```sh
+sudo apt install curl python3-fonttools fontconfig
+font_dir="${XDG_DATA_HOME:-$HOME/.local/share}/fonts"
+mkdir -p "$font_dir"
+curl -fL \
+  -o /tmp/NotoSansJP-VF.ttf \
+  https://raw.githubusercontent.com/notofonts/noto-cjk/Sans2.004/Sans/Variable/TTF/Subset/NotoSansJP-VF.ttf
+python3 -m fontTools.varLib.instancer --update-name-table -q \
+  -o "$font_dir/NotoSansJP-Regular.ttf" \
+  /tmp/NotoSansJP-VF.ttf wght=400
+python3 -m fontTools.varLib.instancer --update-name-table -q \
+  -o "$font_dir/NotoSansJP-Bold.ttf" \
+  /tmp/NotoSansJP-VF.ttf wght=700
+fc-cache -f "$font_dir"
+fc-match -f '%{file}\n' 'Noto Sans JP'
 ```
 
-Install these fonts before building the PDF. The Noto Sans JP regular font is
-also used for italic text, and its bold font is used for bold italic text.
+Sarasa Mono J is distributed as a release archive rather than a Debian, gem,
+or Python package. Install the four Japanese Mono TTF files with:
 
-Font installation locations differ between operating systems and Linux
-distributions. A font being installed on the system is not sufficient if its
-file path differs from the path in the theme. In that case, update the
-`font.catalog` entries in `themes/sc-docs-theme.yml` to point to the actual
-font files. Incorrect paths cause Asciidoctor PDF to report an unknown font or
-fail while generating the PDF.
+```sh
+sudo apt install curl 7zip fontconfig
+font_dir="${XDG_DATA_HOME:-$HOME/.local/share}/fonts"
+mkdir -p "$font_dir"
+curl -fL \
+  -o /tmp/SarasaMonoJ-TTF-1.0.41.7z \
+  https://github.com/be5invis/Sarasa-Gothic/releases/download/v1.0.41/SarasaMonoJ-TTF-1.0.41.7z
+7z x -y /tmp/SarasaMonoJ-TTF-1.0.41.7z \
+  -o"$font_dir"
+fc-cache -f "$font_dir"
+fc-match -f '%{file}\n' 'Sarasa Mono J'
+```
+
+The Makefile searches the current XDG user font directory, the legacy
+`~/.fonts` directory, and `/usr/local/share/fonts`. Asciidoctor PDF does not
+search subdirectories. Override `FONTS_DIR` when the font files are elsewhere;
+the supplied value replaces the complete default search path. Include every
+directory needed by the selected theme and separate them with semicolons:
+
+```sh
+make FONTS_DIR='/opt/fonts/noto;/opt/fonts/sarasa'
+```
+
+Prawn reads and embeds these files directly. Its fallback list supplies a
+glyph that the selected, registered font does not contain. It cannot recover
+from a missing file named in `font.catalog`; an absent catalog file stops the
+build before text is rendered.
+
+Debian's `fonts-noto-cjk` package installs `NotoSansCJK-Regular.ttc` and
+`NotoSansCJK-Bold.ttc` under `/usr/share/fonts/opentype/noto`. Those TTC font
+collections are not the standalone TTF files required by the theme, and Prawn
+cannot use them directly.
 
 ## Building PDFs
 

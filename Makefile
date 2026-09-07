@@ -2,6 +2,8 @@ OUTPUT      ?= SpaceCubics_PDF_revx
 ADOC_SOURCE ?= src/index.adoc
 IMAGES_DIR  ?= images
 BUILD_DIR   ?= build
+XDG_DATA_HOME ?= $(HOME)/.local/share
+FONTS_DIR   ?= $(XDG_DATA_HOME)/fonts;$(HOME)/.fonts;/usr/local/share/fonts
 
 # ADOC_SOURCE may name either an entry-point .adoc file or a directory that
 # contains index.adoc.
@@ -20,6 +22,8 @@ ASCIIDOCTOR_PDF := asciidoctor-pdf
 RUBY            := ruby
 EXTENSION       := scripts/asciidoctor_extensions/small_element.rb
 THEMES_DIR      := themes
+
+FONT_OPTION := $(if $(strip $(FONTS_DIR)),-a pdf-fontsdir="$(FONTS_DIR)")
 
 STANDARD_COVER := images/cover-standard.svg.in
 PRINT_COVER    := images/cover-print.svg.in
@@ -57,6 +61,7 @@ $(STANDARD_PDF): $(ADOC_FILES) $(STANDARD_COVER) $(PDF_ASSETS)
 	  -a reproducible \
 	  -a imagesdir="$(abspath $(IMAGES_DIR))" \
 	  -a imagesoutdir="$(abspath $(BUILD_DIR))" \
+	  $(FONT_OPTION) \
 	  -a pdf-theme=sc-docs \
 	  -a pdf-themesdir="$(THEMES_DIR)" \
 	  -D "$(BUILD_DIR)" \
@@ -76,6 +81,7 @@ $(PRINT_PDF): $(ADOC_FILES) $(PRINT_COVER) $(PRINT_THEME) $(PDF_ASSETS)
 	  -a reproducible \
 	  -a imagesdir="$(abspath $(IMAGES_DIR))" \
 	  -a imagesoutdir="$(abspath $(BUILD_DIR))" \
+	  $(FONT_OPTION) \
 	  -a pdf-theme=sc-docs-print \
 	  -a pdf-themesdir="$(THEMES_DIR)" \
 	  -D "$(BUILD_DIR)" \
