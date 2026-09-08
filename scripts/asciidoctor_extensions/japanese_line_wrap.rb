@@ -141,23 +141,28 @@ module SpaceCubics
         super
         return unless JapaneseLineWrap.enabled? @document
 
-        previous_text = nil
+        previous_text = previous_graphemes = nil
         @unconsumed.each do |fragment|
           text = fragment[:text]
           if text == "\n"
-            previous_text = nil
+            previous_text = previous_graphemes = nil
             next
           end
           next if text.nil? || text.empty?
 
+          current_graphemes = nil
           if previous_text && !fragment[JapaneseLineWrap::VERBATIM]
-            left = JapaneseLineWrap.graphemes(previous_text).last
-            right = JapaneseLineWrap.graphemes(text).first
+            previous_graphemes ||=
+              JapaneseLineWrap.graphemes previous_text
+            current_graphemes = JapaneseLineWrap.graphemes text
+            left = previous_graphemes.last
+            right = current_graphemes.first
             if JapaneseLineWrap.protected_boundary?(left, right)
               fragment[:wj] = true
             end
           end
           previous_text = text
+          previous_graphemes = current_graphemes
         end
       end
     end
