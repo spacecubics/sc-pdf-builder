@@ -102,14 +102,15 @@ module SpaceCubics
       characters = graphemes segment
       return [segment] if characters.length < 2
 
-      characters.drop(1).each_with_object([characters[0].dup]) do |right, tokens|
-        left = graphemes(tokens[-1]).last
+      tokens = [characters[0].dup]
+      characters.each_cons(2) do |left, right|
         if break_opportunity? left, right
           tokens << right.dup
         else
           tokens[-1] << right
         end
       end
+      tokens
     end
 
     module Converter
