@@ -166,7 +166,7 @@ code:
   caption:
     font-family: Sarasa Mono J
     font_size: 8
-    font_color: #0068b7
+    font_color: 0068b7
     font_style: normal
     margin_bottom: 0
     align: left
