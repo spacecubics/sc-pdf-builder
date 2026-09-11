@@ -33,9 +33,13 @@ ASCIIDOCTOR_PDF := asciidoctor-pdf
 RUBY            := ruby
 EXTENSION       := scripts/asciidoctor_extensions/small_element.rb
 KINSOKU_EXT     := scripts/asciidoctor_extensions/japanese_line_wrap.rb
+DRAFT_EXTENSION := scripts/asciidoctor_extensions/draft_watermark.rb
 THEMES_DIR      := themes
 
 FONT_OPTION := $(if $(strip $(FONTS_DIR)),-a pdf-fontsdir="$(FONTS_DIR)")
+ifdef DRAFT
+DRAFT_OPTION := -r ./$(DRAFT_EXTENSION)
+endif
 
 STANDARD_COVER := images/cover-standard.svg.in
 PRINT_COVER    := images/cover-print.svg.in
@@ -46,7 +50,7 @@ STANDARD_THEME := $(THEMES_DIR)/$(THEME)-theme.yml
 PRINT_THEME    := $(THEMES_DIR)/$(THEME)-print-theme.yml
 
 PDF_ASSETS := $(shell find "$(IMAGES_DIR)" -type f -print) \
-	scripts/render_cover.rb $(EXTENSION) $(KINSOKU_EXT)
+	scripts/render_cover.rb $(EXTENSION) $(KINSOKU_EXT) $(DRAFT_EXTENSION)
 
 .NOTPARALLEL:
 .PHONY: all pdf standard pdf-print clean FORCE
@@ -70,6 +74,7 @@ $(BUILD_CONFIG): FORCE | $(BUILD_DIR)
 	  'IMAGES_DIR=$(abspath $(IMAGES_DIR))' \
 	  'FONTS_DIR=$(FONTS_DIR)' \
 	  'THEME=$(THEME)' \
+	  'DRAFT=$(DRAFT)' \
 	  'ASCIIDOCTOR_PDF=$(ASCIIDOCTOR_PDF)' > "$@.tmp"
 	$(Q)if ! cmp -s "$@.tmp" "$@"; then \
 	  mv "$@.tmp" "$@"; \
@@ -92,6 +97,7 @@ $(STANDARD_PDF): $(ADOC_FILES) $(STANDARD_RENDERED_COVER) $(STANDARD_THEME) \
 	$(QUIET_GEN) $(ASCIIDOCTOR_PDF) \
 	  -r ./$(EXTENSION) \
 	  -r ./$(KINSOKU_EXT) \
+	  $(DRAFT_OPTION) \
 	  -r asciidoctor-mathematical \
 	  --failure-level WARN \
 	  --trace \
@@ -110,6 +116,7 @@ $(PRINT_PDF): $(ADOC_FILES) $(PRINT_RENDERED_COVER) $(STANDARD_THEME) \
 	$(QUIET_GEN) $(ASCIIDOCTOR_PDF) \
 	  -r ./$(EXTENSION) \
 	  -r ./$(KINSOKU_EXT) \
+	  $(DRAFT_OPTION) \
 	  -r asciidoctor-mathematical \
 	  --failure-level WARN \
 	  --trace \

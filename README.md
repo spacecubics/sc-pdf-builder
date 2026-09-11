@@ -200,6 +200,23 @@ with dark text and logo artwork, reducing toner or ink use. The standard PDF
 has a dark cover with white text and logo artwork. The document body is the
 same in both variants.
 
+### Draft watermark
+
+Set the build option `DRAFT` to place a translucent, diagonal `DRAFT`
+watermark on every page, including the cover and table of contents:
+
+```sh
+bundle exec make DRAFT=1
+bundle exec make pdf-print DRAFT=1
+```
+
+This works with both themes and with the sample Makefile in a document
+repository. Any non-empty `DRAFT` value enables watermarking, including `0`.
+Leave `DRAFT` unset or empty (`DRAFT=`) to disable it. The build option is the
+sole control; no document attribute is needed or consulted. Changing `DRAFT`
+automatically rebuilds the PDF; no clean is needed. The output filename stays
+the same, so use `OUTPUT=document-draft` to keep a separate draft copy.
+
 ## Use the builder in a document repository
 
 Clone this repository into the root of your document repository and copy the
@@ -248,11 +265,12 @@ The supported variables are:
 | `BUILD_DIR` | Generated-file directory | `build` |
 | `FONTS_DIR` | Semicolon-separated font directories; an override replaces all defaults | standard Linux font directories |
 | `THEME` | Theme basename | `sc-docs` |
+| `DRAFT` | Add a `DRAFT` watermark to every page when non-empty | unset |
 
 The builder records content-affecting settings in `BUILD_DIR`. Changing the
-document entry point, image or font directories, or theme causes Make to
-regenerate the PDF even when the existing output is newer than the newly
-selected inputs.
+document entry point, image or font directories, theme, or draft setting
+causes Make to regenerate the PDF even when the existing output is newer
+than the newly selected inputs.
 
 ## Start a document
 
