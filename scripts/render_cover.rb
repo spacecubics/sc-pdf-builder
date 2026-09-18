@@ -4,6 +4,7 @@
 require "cgi"
 require "date"
 require "open3"
+require "asciidoctor"
 
 ATTRIBUTE_TO_PLACEHOLDER = {
   "confidential-label" => "CONFIDENTIAL_LABEL",
@@ -15,10 +16,10 @@ ATTRIBUTE_TO_PLACEHOLDER = {
 }.freeze
 
 def read_adoc_attributes(path)
-  File.readlines(path, chomp: true, encoding: "UTF-8").each_with_object({}) do |line, attributes|
-    match = line.match(/^:([a-z0-9_-]+):(?:\s+(.*))?$/)
-    attributes[match[1]] = match[2] || "" if match
-  end
+  attributes = Asciidoctor.load_file(path, safe: :safe, parse_header_only: true).attributes
+  attributes["date"] = attributes.fetch("date", attributes.fetch("revdate", ""))
+  attributes["revision"] = attributes.fetch("revision", attributes.fetch("revnumber", ""))
+  attributes
 end
 
 def git_output(document, *arguments)
@@ -60,7 +61,7 @@ def main
     replacements[placeholder] = attributes.fetch(attribute, "")
   end
   replacements.each do |placeholder, value|
-    source = source.gsub("@#{placeholder}@", CGI.escapeHTML(value))
+    source = source.gsub("@#{placeholder}@", CGI.escapeHTML(CGI.unescapeHTML(value)))
   end
   File.write(output, source, encoding: "UTF-8")
 end

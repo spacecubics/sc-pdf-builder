@@ -1,11 +1,11 @@
 = Space Cubics PDF Builder: Asciidoctor PDF Generation Environment Template
-:author: Space Cubics Inc.
+Space Cubics Inc.
+v1.0, 1970-01-01
 :confidential-label: SC Confidential
 :document-number: SC-ESP-XXXXX
 :product-name: Design Guide
-:date: January 1, 1970
-:revision: 1.0
-:cover-footer-text: PART NUMBER: SC-OBC-A0001
+:part-number: SC-OBC-A0001
+:cover-footer-text: PART NUMBER: {part-number}
 :copyright-year: 2026
 :doctype: book
 :lang: ja
