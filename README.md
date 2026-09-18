@@ -272,6 +272,15 @@ document entry point, image or font directories, theme, or draft setting
 causes Make to regenerate the PDF even when the existing output is newer
 than the newly selected inputs.
 
+## Source dependencies
+
+The builder scans the source directory recursively for AsciiDoc files.
+List additional inputs in `ADOC_DEPS`. Paths are relative to the builder
+directory.
+
+Both covers and PDFs depend on those files. Changing the dependency list
+invalidates the build configuration.
+
 ## Start a document
 
 The entry-point file holds the title, document settings, and chapter includes.
