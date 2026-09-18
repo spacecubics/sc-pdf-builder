@@ -210,8 +210,8 @@ bundle exec make DRAFT=1
 bundle exec make pdf-print DRAFT=1
 ```
 
-This works with both themes and with the sample Makefile in a document
-repository. Any non-empty `DRAFT` value enables watermarking, including `0`.
+This works with both themes and with `document.mk`. Any non-empty `DRAFT`
+value enables watermarking, including `0`.
 Leave `DRAFT` unset or empty (`DRAFT=`) to disable it. The build option is the
 sole control; no document attribute is needed or consulted. Changing `DRAFT`
 automatically rebuilds the PDF; no clean is needed. The output filename stays
@@ -219,69 +219,110 @@ the same, so use `OUTPUT=document-draft` to keep a separate draft copy.
 
 ## Use the builder in a document repository
 
-Clone this repository into the root of your document repository and copy the
-sample Makefile:
+Clone the builder into your document repository:
 
 ```sh
 git clone https://github.com/spacecubics/sc-pdf-builder.git
-cp sc-pdf-builder/Makefile_sample Makefile
-cd sc-pdf-builder
-bundle config set --local path vendor/bundle
-CMAKE_POLICY_VERSION_MINIMUM=3.5 \
-CMAKE_GENERATOR="Unix Makefiles" \
-bundle install
-cd ..
-BUNDLE_GEMFILE=sc-pdf-builder/Gemfile bundle exec make \
-  THEME=simple
 ```
 
-The sample Makefile expects `src/index.adoc` and `images/` in the document
-repository. You can change these defaults in the copied Makefile or override
-them for one build:
+Create a `Makefile` in your document repository with the following contents.
+Set `ADOC_SOURCE` and `IMAGES_DIR` to your document's paths.
+The `document.mk` include supplies `pdf`, `pdf-print`, `pdf-setup`, and
+`pdf-clean`.
+
+```make
+.DEFAULT_GOAL := pdf
+
+ADOC_SOURCE := manual.adoc
+IMAGES_DIR := images
+PDF_BUILDER ?= sc-pdf-builder
+
+include $(PDF_BUILDER)/document.mk
+
+.PHONY: clean
+clean: pdf-clean
+```
+
+After installing the system dependencies and fonts described above, run:
 
 ```sh
-BUNDLE_GEMFILE=sc-pdf-builder/Gemfile bundle exec make pdf \
-  THEME=simple \
-  ADOC_SOURCE=docs/manual/manual.adoc \
-  IMAGES_DIR=docs/assets \
-  OUTPUT=Hardware_Manual
+make pdf-setup
+make pdf
+make pdf-print
 ```
 
-After installing Noto Sans JP and Sarasa Mono J, use the Space Cubics defaults
-with:
+`pdf-setup` installs the builder's gems in `.bundle/pdf-gems/` within the
+document repository. The PDF targets run Bundler automatically. Ignore
+`.bundle/`, `build/`, and the builder checkout in the document repository's
+`.gitignore`.
 
-```sh
-BUNDLE_GEMFILE=sc-pdf-builder/Gemfile bundle exec make
+`document.mk` locates the builder from its own path. Set `PDF_BUILDER` to use
+another checkout. Cloning and selecting the builder revision remain explicit
+setup steps.
+
+The include preserves an existing default goal. When the include precedes
+all project targets, set `.DEFAULT_GOAL` explicitly or define a target after
+it. The include does not define `all` or `clean`. Connect project cleanup to
+`pdf-clean` as shown above. PDF builds share intermediate files, so the
+include disables parallel recipes in the calling Makefile.
+
+### Generated document sources
+
+Keep source-generation rules in the document project. For example:
+
+```make
+.DEFAULT_GOAL := combined
+ADOC_SOURCE := report/combined.adoc
+IMAGES_DIR := report
+OUTPUT := report
+
+include sc-pdf-builder/document.mk
+
+.PHONY: combined
+combined: $(ADOC_SOURCE)
+
+$(ADOC_SOURCE): $(PARTS)
+	cat $(PARTS) > $@
+
+pdf pdf-print: $(ADOC_SOURCE)
 ```
 
-The supported variables are:
+Define `PARTS` in document order. The PDF targets wait for the generated
+source before invoking the builder.
+
+### Build settings and dependencies
 
 | Variable | Meaning | Default |
 | --- | --- | --- |
-| `PDF_BUILDER` | Path to this repository | `sc-pdf-builder` |
-| `ADOC_SOURCE` | Entry-point `.adoc` file | `src/index.adoc` |
-| `IMAGES_DIR` | Directory for `image::` references | `images` |
-| `OUTPUT` | PDF basename, without `.pdf` | `document` |
+| `PDF_BUILDER` | Builder checkout | Directory containing `document.mk` |
+| `PDF_GEMS` | Local Bundler installation | `.bundle/pdf-gems` |
+| `ADOC_SOURCE` | Entry-point file or directory containing `index.adoc` | `src/index.adoc` |
+| `ADOC_RECURSIVE` | Set to `1` to scan nested source directories | `0` with `document.mk`, `1` for existing wrappers |
+| `ADOC_DEPS` | Additional source dependencies, relative to the document project | Empty |
+| `IMAGES_DIR` | Directory for document images | `images` |
+| `OUTPUT` | PDF basename | Source basename without `.adoc`, or source directory name |
 | `BUILD_DIR` | Generated-file directory | `build` |
-| `FONTS_DIR` | Semicolon-separated font directories; an override replaces all defaults | standard Linux font directories |
+| `FONTS_DIR` | Semicolon-separated font directories, replacing the complete search path | Builder's font search path |
 | `THEME` | Theme basename | `sc-docs` |
 | `DRAFT` | Add a `DRAFT` watermark to every page when non-empty | unset |
 
-The builder records content-affecting settings in `BUILD_DIR`. Changing the
-document entry point, image or font directories, theme, or draft setting
-causes Make to regenerate the PDF even when the existing output is newer
-than the newly selected inputs.
+With `document.mk`, the builder tracks the entry point and `.adoc` files
+immediately beside it.
+For includes in subdirectories or other source assets, list the files in
+`ADOC_DEPS` before including `document.mk`:
 
-## Source dependencies
+```make
+ADOC_DEPS := $(wildcard chapters/*.adoc) data/measurements.csv
+```
 
-Existing wrappers retain recursive scanning of the source directory.
-Set `ADOC_RECURSIVE=0` to track only the entry point and adjacent `.adoc`
-files. List nested includes and other source inputs in `ADOC_DEPS`.
-Paths are relative to the builder directory for this interface.
+When migrating an existing wrapper to `document.mk`, declare nested
+dependencies or set `ADOC_RECURSIVE := 1` to retain recursive scanning.
+Files under `IMAGES_DIR` remain dependencies of both PDFs. Keep images in a
+dedicated directory to avoid tracking generated output or installed gems.
 
-Both covers and PDFs depend on those files. Changing the dependency list
-or scan mode invalidates the build configuration. Changes to `pdf.mk`
-also rebuild the PDFs.
+Changing the source, dependency list, image or font directories, theme, or
+`DRAFT` setting regenerates the PDF. The direct builder Makefile still
+supports builds inside an active Ruby environment without Bundler.
 
 ## Start a document
 
