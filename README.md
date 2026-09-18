@@ -274,12 +274,13 @@ than the newly selected inputs.
 
 ## Source dependencies
 
-The builder scans the source directory recursively for AsciiDoc files.
-List additional inputs in `ADOC_DEPS`. Paths are relative to the builder
-directory.
+Existing wrappers retain recursive scanning of the source directory.
+Set `ADOC_RECURSIVE=0` to track only the entry point and adjacent `.adoc`
+files. List nested includes and other source inputs in `ADOC_DEPS`.
+Paths are relative to the builder directory for this interface.
 
 Both covers and PDFs depend on those files. Changing the dependency list
-invalidates the build configuration.
+or scan mode invalidates the build configuration.
 
 ## Start a document
 

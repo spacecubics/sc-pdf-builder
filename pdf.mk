@@ -23,7 +23,12 @@ else
 ADOC_ENTRY := $(patsubst %/,%,$(ADOC_SOURCE))/index.adoc
 endif
 ADOC_DIR   := $(patsubst %/,%,$(dir $(ADOC_ENTRY)))
-ADOC_FILES := $(shell find "$(ADOC_DIR)" -type f -name '*.adoc' -print) $(ADOC_DEPS)
+ADOC_RECURSIVE ?= 1
+ifeq ($(ADOC_RECURSIVE),1)
+ADOC_FILES := $(shell find -H "$(ADOC_DIR)" -type f -name '*.adoc' -print) $(ADOC_DEPS)
+else
+ADOC_FILES := $(ADOC_ENTRY) $(wildcard $(ADOC_DIR)/*.adoc) $(ADOC_DEPS)
+endif
 
 STANDARD_PDF := $(BUILD_DIR)/$(OUTPUT).pdf
 PRINT_PDF    := $(BUILD_DIR)/$(OUTPUT)-print.pdf
@@ -76,6 +81,7 @@ $(BUILD_CONFIG): FORCE | $(BUILD_DIR)
 	  'THEME=$(THEME)' \
 	  'DRAFT=$(DRAFT)' \
 	  'ADOC_DEPS=$(ADOC_DEPS)' \
+	  'ADOC_RECURSIVE=$(ADOC_RECURSIVE)' \
 	  'ASCIIDOCTOR_PDF=$(ASCIIDOCTOR_PDF)' > "$@.tmp"
 	$(Q)if ! cmp -s "$@.tmp" "$@"; then \
 	  mv "$@.tmp" "$@"; \
