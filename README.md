@@ -337,3 +337,17 @@ tables, code, and other page styles. The print theme inherits it from
 Edit `images/cover-standard.svg.in` and `images/cover-print.svg.in` to change
 the cover layout. Preserve placeholders such as `@DOCUMENT_NUMBER@`; the
 build replaces them with document attributes.
+
+## Run checks
+
+Build the sample to check document integration with the actual PDF renderer:
+
+```sh
+bundle exec make pdf pdf-print
+```
+
+Run the Japanese line-wrap tests from the builder directory:
+
+```sh
+bundle exec ruby test/japanese_line_wrap_test.rb
+```
