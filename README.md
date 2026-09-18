@@ -280,7 +280,8 @@ files. List nested includes and other source inputs in `ADOC_DEPS`.
 Paths are relative to the builder directory for this interface.
 
 Both covers and PDFs depend on those files. Changing the dependency list
-or scan mode invalidates the build configuration.
+or scan mode invalidates the build configuration. Changes to `pdf.mk`
+also rebuild the PDFs.
 
 ## Start a document
 

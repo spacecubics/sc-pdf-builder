@@ -55,7 +55,7 @@ STANDARD_THEME := $(THEMES_DIR)/$(THEME)-theme.yml
 PRINT_THEME    := $(THEMES_DIR)/$(THEME)-print-theme.yml
 
 PDF_ASSETS := $(shell find "$(IMAGES_DIR)" -type f -print) \
-	scripts/render_cover.rb $(EXTENSION) $(KINSOKU_EXT) $(DRAFT_EXTENSION)
+	scripts/render_cover.rb $(EXTENSION) $(KINSOKU_EXT) $(DRAFT_EXTENSION) pdf.mk
 
 .NOTPARALLEL:
 .PHONY: all pdf standard pdf-print clean FORCE
