@@ -82,12 +82,12 @@ $(BUILD_CONFIG): FORCE | $(BUILD_DIR)
 	  rm "$@.tmp"; \
 	fi
 
-$(STANDARD_RENDERED_COVER): $(STANDARD_COVER) $(ADOC_ENTRY) \
+$(STANDARD_RENDERED_COVER): $(STANDARD_COVER) $(ADOC_FILES) \
 	scripts/render_cover.rb $(BUILD_CONFIG) | $(BUILD_DIR)
 	$(QUIET_GEN) $(RUBY) scripts/render_cover.rb \
 	  "$(STANDARD_COVER)" "$@" --adoc "$(ADOC_ENTRY)"
 
-$(PRINT_RENDERED_COVER): $(PRINT_COVER) $(ADOC_ENTRY) \
+$(PRINT_RENDERED_COVER): $(PRINT_COVER) $(ADOC_FILES) \
 	scripts/render_cover.rb $(BUILD_CONFIG) | $(BUILD_DIR)
 	$(QUIET_GEN) $(RUBY) scripts/render_cover.rb \
 	  "$(PRINT_COVER)" "$@" --adoc "$(ADOC_ENTRY)"

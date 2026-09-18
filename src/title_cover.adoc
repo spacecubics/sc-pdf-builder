@@ -31,7 +31,7 @@ Asciidoctorのデフォルトは `:` です。
 表紙にはSpace Cubicsのロゴを表示しています。
 このデザインでは、Author情報として「Space Cubics Inc.」を重ねて表示する必要がないためです。
 
-`src/index.adoc` の `:author:` に設定されている情報は、PDFのメタデータとして埋め込まれます。
+タイトル行の次に記載した著者名は、PDFのメタデータとして埋め込まれます。
 個人名などを表紙に表示したい場合は、`themes/sc-docs-theme.yml` を編集してください。
 
 [source,yml]
@@ -97,9 +97,25 @@ Product Nameは文書名の上部に配置されます。
 
 フィールドが空の場合は、何も表示されません。
 
+=== Revision line
+
+タイトル行、著者行に続けて、AsciiDocのリビジョン行を記載します。
+このサンプルでは、次のヘッダーから表紙の日付とリビジョンを取得します。
+
+[source,asciidoc]
+----
+= Space Cubics PDF Builder: Asciidoctor PDF Generation Environment Template
+Space Cubics Inc.
+v1.0, 1970-01-01
+----
+
+Asciidoctorは `revnumber` を `1.0`、`revdate` を `1970-01-01` に設定します。
+表紙も同じ値を使用するため、日付とリビジョンを別の属性に重複して記載する必要はありません。
+
 === Date
 
-表紙の日付は `src/index.adoc` の `:date:` に設定します。
+表紙の日付は、既定でリビジョン行の `revdate` を使用します。
+別の日付を表示する場合は、`src/index.adoc` に `:date:` を設定します。
 日付を指定した場合は、その値をそのまま表示します。
 
 [source,asciidoc]
@@ -123,7 +139,8 @@ DATE: August 21, 2026
 
 === Revision
 
-表紙のリビジョンは `src/index.adoc` の `:revision:` に設定します。
+表紙のリビジョンは、既定でリビジョン行の `revnumber` を使用します。
+別の値を表示する場合は、`src/index.adoc` に `:revision:` を設定します。
 数値などを指定した場合は、その値をそのまま表示します。
 
 [source,asciidoc]
@@ -154,8 +171,11 @@ REVISION: a2b08711b7d5-dirty
 
 [source,asciidoc]
 ----
-:cover-footer-text: PART NUMBER: SC-OBC-A0001
+:part-number: SC-OBC-A0001
+:cover-footer-text: PART NUMBER: {part-number}
 ----
+
+表紙の属性では、`{part-number}` のように他の属性を参照できます。
 
 何も表示しない場合は、値を空にします。
 

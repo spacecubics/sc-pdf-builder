@@ -279,11 +279,10 @@ A minimal example is:
 
 ```asciidoc
 = Hardware Manual
-:author: Space Cubics Inc.
+Space Cubics Inc.
+v1.0, 1970-01-01
 :product-name: My Product
 :document-number: SC-DOC-001
-:date: BUILDDATE
-:revision: GITHASH
 :copyright-year: 2026
 :doctype: book
 :lang: ja
@@ -321,8 +320,14 @@ The cover renderer reads these attributes from the entry-point file:
 | `document-number` | Document identifier | |
 | `confidential-label` | Classification label | |
 | `cover-footer-text` | Cover footer text | |
-| `date` | Publication date | `BUILDDATE` uses today's date |
-| `revision` | Document revision | `GITHASH` uses the current Git revision |
+| `date` | Publication date, falling back to `revdate` | `BUILDDATE` uses today's date |
+| `revision` | Document revision, falling back to `revnumber` | `GITHASH` uses the current Git revision |
+
+The renderer reads the AsciiDoc header through Asciidoctor. A standard
+revision line such as `v0.1, 2026-09-13` supplies `revnumber` (`0.1`) and
+`revdate`. Explicit `date` and `revision` attributes override these values,
+including when the attributes are empty. Header attribute references and
+included header files follow Asciidoctor's parsing rules.
 
 `GITHASH` gains a `-dirty` suffix when tracked files have uncommitted changes.
 The PDF theme reads `copyright-year` directly for the page footer; it is not a
