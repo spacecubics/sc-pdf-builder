@@ -83,6 +83,8 @@ title-page:
     font-family: IPAex Gothic
     font-size: 10.5
     font-color: FFFFFF
+  revision:
+    display: none
 
 toc:
   font-family: IPAex Gothic

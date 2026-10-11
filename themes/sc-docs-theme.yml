@@ -88,6 +88,8 @@ title-page:
     font-family: Noto Sans JP
     font-size: 10.5
     font-color: FFFFFF
+  revision:
+    display: none
 
 toc:
   font-family: Noto Sans JP
