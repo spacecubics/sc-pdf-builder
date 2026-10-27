@@ -203,6 +203,12 @@ For shared diagrams, avoid external imports and icons unless the editor
 supports them. Fonts and D2 versions can affect the appearance of the PDF and
 browser preview.
 
+For local documents, use `d2::flow.d2[]` to render a separate file, relative to
+the document directory. The builder tracks `.d2` files alongside `.adoc`
+files. Declare files elsewhere in `ADOC_DEPS`. If a D2 file imports other
+files, also set `:d2-nocache-option:` in the document header so changes to
+those imports regenerate the diagram.
+
 ## Build the included example
 
 After completing the Space Cubics setup above, build the included example
@@ -352,7 +358,7 @@ source before invoking the builder.
 | `THEME` | Theme basename | `sc-docs` |
 | `DRAFT` | Add a `DRAFT` watermark to every page when non-empty | unset |
 
-With `document.mk`, the builder tracks the entry point and `.adoc` files
+With `document.mk`, the builder tracks the entry point and `.adoc` and `.d2` files
 immediately beside it.
 For includes in subdirectories or other source assets, list the files in
 `ADOC_DEPS` before including `document.mk`:
