@@ -157,6 +157,52 @@ every PDF build. Enable equation rendering in a document with:
 The included example enables both attributes. A document that does not set
 `:stem:` builds normally without rendering equations.
 
+## D2 diagrams
+
+The builder renders `[d2]` blocks as SVG images in both PDF variants.
+Install the Ruby dependencies with `bundle install` or `make pdf-setup`.
+Install the [D2 CLI](https://d2lang.com/tour/install/) separately and put `d2`
+on `PATH`. Check the installation with `d2 version`.
+Documents without D2 diagrams do not need the executable.
+
+Use a listing block with an optional caption:
+
+```asciidoc
+.Request flow
+[d2]
+----
+client -> server: request
+server -> database: query
+----
+```
+
+Use `[source,d2]` to display D2 as code. The builder leaves the source of
+diagram blocks unchanged, including Japanese labels and D2 variables.
+Generated images and the diagram cache stay under `BUILD_DIR`.
+`make clean` or `make pdf-clean` removes them. A missing executable or invalid
+diagram stops the PDF build.
+
+For documents shared with a browser editor, keep rendering settings inside
+the D2 source so both renderers receive them:
+
+```asciidoc
+[d2]
+----
+vars: {
+  d2-config: {
+    layout-engine: elk
+    theme-id: 4
+    pad: 20
+  }
+}
+client -> server
+----
+```
+
+For shared diagrams, avoid external imports and icons unless the editor
+supports them. Fonts and D2 versions can affect the appearance of the PDF and
+browser preview.
+
 ## Build the included example
 
 After completing the Space Cubics setup above, build the included example
