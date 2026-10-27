@@ -25,9 +25,9 @@ endif
 ADOC_DIR   := $(patsubst %/,%,$(dir $(ADOC_ENTRY)))
 ADOC_RECURSIVE ?= 1
 ifeq ($(ADOC_RECURSIVE),1)
-ADOC_FILES := $(shell find -H "$(ADOC_DIR)" -type f -name '*.adoc' -print) $(ADOC_DEPS)
+ADOC_FILES := $(shell find -H "$(ADOC_DIR)" -type f \( -name '*.adoc' -o -name '*.d2' \) -print) $(ADOC_DEPS)
 else
-ADOC_FILES := $(ADOC_ENTRY) $(wildcard $(ADOC_DIR)/*.adoc) $(ADOC_DEPS)
+ADOC_FILES := $(ADOC_ENTRY) $(wildcard $(ADOC_DIR)/*.adoc $(ADOC_DIR)/*.d2) $(ADOC_DEPS)
 endif
 
 STANDARD_PDF := $(BUILD_DIR)/$(OUTPUT).pdf
