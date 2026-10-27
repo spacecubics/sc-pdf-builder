@@ -39,6 +39,7 @@ RUBY            := ruby
 EXTENSION       := scripts/asciidoctor_extensions/small_element.rb
 KINSOKU_EXT     := scripts/asciidoctor_extensions/japanese_line_wrap.rb
 DRAFT_EXTENSION := scripts/asciidoctor_extensions/draft_watermark.rb
+D2_EXTENSION    := scripts/asciidoctor_extensions/d2.rb
 THEMES_DIR      := themes
 
 FONT_OPTION := $(if $(strip $(FONTS_DIR)),-a pdf-fontsdir="$(FONTS_DIR)")
@@ -55,7 +56,7 @@ STANDARD_THEME := $(THEMES_DIR)/$(THEME)-theme.yml
 PRINT_THEME    := $(THEMES_DIR)/$(THEME)-print-theme.yml
 
 PDF_ASSETS := $(shell find "$(IMAGES_DIR)" -type f -print) \
-	scripts/render_cover.rb $(EXTENSION) $(KINSOKU_EXT) $(DRAFT_EXTENSION) pdf.mk
+	scripts/render_cover.rb $(EXTENSION) $(KINSOKU_EXT) $(DRAFT_EXTENSION) $(D2_EXTENSION) pdf.mk
 
 .NOTPARALLEL:
 .PHONY: all pdf standard pdf-print clean FORCE
@@ -105,12 +106,15 @@ $(STANDARD_PDF): $(ADOC_FILES) $(STANDARD_RENDERED_COVER) $(STANDARD_THEME) \
 	  -r ./$(EXTENSION) \
 	  -r ./$(KINSOKU_EXT) \
 	  $(DRAFT_OPTION) \
+	  -r ./$(D2_EXTENSION) \
 	  -r asciidoctor-mathematical \
 	  --failure-level WARN \
 	  --trace \
 	  -a reproducible \
 	  -a imagesdir="$(abspath $(IMAGES_DIR))" \
 	  -a imagesoutdir="$(abspath $(BUILD_DIR))" \
+	  -a diagram-cachedir="$(abspath $(BUILD_DIR))/.asciidoctor/diagram" \
+	  -a d2-on-error=abort \
 	  -a pdf-cover-image="$(abspath $(STANDARD_RENDERED_COVER))" \
 	  $(FONT_OPTION) \
 	  -a pdf-theme="$(THEME)" \
@@ -124,12 +128,15 @@ $(PRINT_PDF): $(ADOC_FILES) $(PRINT_RENDERED_COVER) $(STANDARD_THEME) \
 	  -r ./$(EXTENSION) \
 	  -r ./$(KINSOKU_EXT) \
 	  $(DRAFT_OPTION) \
+	  -r ./$(D2_EXTENSION) \
 	  -r asciidoctor-mathematical \
 	  --failure-level WARN \
 	  --trace \
 	  -a reproducible \
 	  -a imagesdir="$(abspath $(IMAGES_DIR))" \
 	  -a imagesoutdir="$(abspath $(BUILD_DIR))" \
+	  -a diagram-cachedir="$(abspath $(BUILD_DIR))/.asciidoctor/diagram" \
+	  -a d2-on-error=abort \
 	  -a pdf-cover-image="$(abspath $(PRINT_RENDERED_COVER))" \
 	  $(FONT_OPTION) \
 	  -a pdf-theme="$(THEME)-print" \
