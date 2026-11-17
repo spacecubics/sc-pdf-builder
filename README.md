@@ -8,9 +8,28 @@ Use them as they are, or adapt them to the requirements of your document.
 The template produces a standard PDF and a print-friendly PDF whose cover
 uses less solid-color fill.
 
-The PDF toolchain is Ruby-based. Bundler can isolate Ruby gems inside this
-repository under `vendor/bundle`. It is recommended, but optional: the build
-can also use the active Ruby environment directly.
+## Build with Nix
+
+1. Install [Nix](https://nixos.org/download/) with flakes enabled.
+   Use Linux, Apple Silicon macOS, or Linux under WSL2 on Windows.
+2. From this repository, build both PDF variants:
+
+   ```sh
+   nix develop --command make pdf pdf-print
+   ```
+
+3. Open `build/SpaceCubics_PDF_revx.pdf` or
+   `build/SpaceCubics_PDF_revx-print.pdf`.
+
+Nix supplies Ruby dependencies, fonts, and D2. No separate `bundle install`
+or font setup is needed. The first build downloads dependencies.
+
+For a document repository using [`document.mk`](#use-the-builder-in-a-document-repository),
+run from that repository:
+
+```sh
+nix develop ./sc-pdf-builder --command make pdf
+```
 
 ## Get a first PDF on Debian or Ubuntu
 
@@ -51,8 +70,8 @@ design uses Noto Sans JP and Sarasa Mono J.
 
 `bundle config set --local` writes the setting to `.bundle/config` in this
 repository. Both `.bundle/` and `vendor/bundle/` are ignored by Git. No gems
-are installed globally. Bundler-generated lock files are also local and
-ignored by Git.
+are installed globally. `Gemfile.lock` is committed so the Bundler and Nix
+builds share the same dependency versions.
 
 Mathematical's bundled CMake files declare compatibility with CMake 2.8.7,
 which CMake 4 rejects. `CMAKE_POLICY_VERSION_MINIMUM=3.5` tells current CMake
