@@ -2,4 +2,4 @@
 /build/
 /\.bundle/
 /vendor/bundle/
-/Gemfile.lock
+/result
