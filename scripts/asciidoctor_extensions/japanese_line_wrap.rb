@@ -207,8 +207,14 @@ module SpaceCubics
       end
 
       def fragment_begins_with_breakable?(fragment)
-        return true if JapaneseLineWrap.enabled?(@document) &&
-          @space_cubics_verbatim_fragment
+        return super unless JapaneseLineWrap.enabled?(@document)
+        return true if @space_cubics_verbatim_fragment
+
+        if @previous_fragment && !@previous_fragment.empty? && !fragment.empty?
+          left = JapaneseLineWrap.graphemes(@previous_fragment).last
+          right = fragment.each_grapheme_cluster.first
+          return true if JapaneseLineWrap.break_opportunity?(left, right)
+        end
 
         super
       end

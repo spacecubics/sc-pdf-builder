@@ -179,6 +179,16 @@ class JapaneseLineWrapTest
     )
   end
 
+  def test_keeps_fitting_japanese_text_before_a_link
+    assert_equal(
+      ['例文。 詳細は', 'Section 2'],
+      render_lines([
+        { text: '例文。 詳細は' },
+        { text: 'Section 2', anchor: 'details' },
+      ], width: 80)
+    )
+  end
+
   private
 
   def assert(condition, message = 'assertion failed')
